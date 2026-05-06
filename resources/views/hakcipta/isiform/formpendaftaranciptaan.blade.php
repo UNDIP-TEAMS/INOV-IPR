@@ -108,14 +108,14 @@
   </div>
 
       <div class="field">
-        <label class="label">Link Ciptaan <span class="req">*</span></label>
+        <label class="label">Link Ciptaan </label>
+        <p class="hint">Isi jika memilih jenis cipta <strong>karya rekaman video</strong></p>
         <input
           type="url"
           class="input"
           name="link_ciptaan"
           placeholder="Contoh: https://drive.google.com/..."
           value="{{ old('link_ciptaan', $data['link_ciptaan'] ?? '') }}"
-          required
         >
         @error('link_ciptaan') <small class="err">{{ $message }}</small> @enderror
       </div>
@@ -133,16 +133,30 @@
         @error('judul_ciptaan') <small class="err">{{ $message }}</small> @enderror
       </div>
       <div class="field span-2">
-        <label class="label">Produk Ciptaan Berupa? <span class="req">*</span></label>
+        <label class="label">Tempat Diumumkan Ciptaan <span class="req">*</span></label>
+        <p class="hint">Tempat dimana ciptaan pertama kali diumumkan</p>
         <input
           type="text"
           class="input"
-          name="berupa"
-          placeholder="Produk ciptaan berupa..."
-          value="{{ old('berupa', $data['berupa'] ?? '') }}"
+          name="tempatpertama"
+          placeholder="Contoh: Jakarta"
+          value="{{ old('tempatpertama', $data['tempatpertama'] ?? '') }}"
           required
         >
-        @error('berupa') <small class="err">{{ $message }}</small> @enderror
+        @error('tempatpertama') <small class="err">{{ $message }}</small> @enderror
+      </div>
+
+      <div class="field">
+        <label class="label">Tanggal Ciptaan Diumumkan <span class="req">*</span></label>
+        <p class="hint">Tanggal dimana ciptaan pertama kali diumumkan</p>
+        <input
+          type="date"
+          class="input"
+          id="tanggal_pertama"
+          name="tanggal_pertama"
+          value="{{ old('tanggal_pertama', $data['tanggal_pertama'] ?? now()->format('Y-m-d')) }}"
+        >
+        @error('tanggal_pertama') <small class="err">{{ $message }}</small> @enderror
       </div>
 
       <div class="field">

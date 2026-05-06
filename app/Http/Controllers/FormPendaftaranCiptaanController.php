@@ -21,11 +21,14 @@ class FormPendaftaranCiptaanController extends Controller
     'jenis_cipta'            => ['required', 'in:Buku,Program Komputer,Karya Rekaman Video,Lainnya'],
     'jenis_cipta_lainnya'    => ['nullable', 'string', 'max:255'],
     'judul_ciptaan'          => ['required', 'string', 'max:255'],
-    'link_ciptaan'           => ['required', 'url'],
-    'berupa'                 => ['required', 'string', 'max:255'],
+    'link_ciptaan'           => ['nullable', 'url'],
+    'berupa'                 => ['nulabel', 'string', 'max:255'],
     'tanggal_pengisian'      => ['required', 'date'],
     'tempat'                 => ['required', 'string', 'max:100'],
     'uraian'                 => ['required', 'string', 'max:350'],
+
+    'tempatpertama' => ['required', 'string', 'max:100'],
+    'tanggal_pertama' => ['required', 'date'],
 
     'inventor'               => ['required', 'array'],
 
@@ -79,7 +82,8 @@ class FormPendaftaranCiptaanController extends Controller
             'jenis_cipta_lainnya'  => $request->jenis_cipta_lainnya,
             'link_ciptaan'         => $request->link_ciptaan ?? ($existingForm['link_ciptaan'] ?? null),
             'judul_ciptaan'        => $request->judul_ciptaan,
-            'berupa'               => $request->berupa ?? ($existingForm['berupa'] ?? null),
+            'tempatpertama'        => $request->tempatpertama ?? ($existingForm['tempatpertama'] ?? null),
+            'tanggal_pertama'      => $request->tanggal_pertama ?? ($existingForm['tanggal_pertama'] ?? null),
             'tanggal_pengisian'    => $request->tanggal_pengisian ?? ($existingForm['tanggal_pengisian'] ?? null),
             'tempat'               => $request->tempat ?? ($existingForm['tempat'] ?? null),
             'uraian'               => $request->uraian ?? ($existingForm['uraian'] ?? null),
@@ -100,10 +104,13 @@ class FormPendaftaranCiptaanController extends Controller
         $tp->setValue('judul_ciptaan', $this->val($data['judul_ciptaan']));
         $tp->setValue('link_ciptaan', $this->val($data['link_ciptaan']));
 
-        // tanggal + tempat
-        $tgl = Carbon::parse($data['tanggal_pengisian'])->locale('id')->translatedFormat('d F Y');
-        $tp->setValue('tempat', $this->val($data['tempat']));
-        $tp->setValue('tanggal_terbit', $tgl);
+       // tanggal + tempat pengisian
+        $tgl = Carbon::parse($data['tanggal_pertama'])
+            ->locale('id')
+            ->translatedFormat('d F Y');
+
+        $tp->setValue('tempatpertama', $this->val($data['tempatpertama']));
+        $tp->setValue('tanggal_pertama', $tgl);
 
         // === inventor rows
         $names = array_map(
