@@ -17,8 +17,9 @@ class PernyataanCiptaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'judul_ciptaan'   => ['required', 'string', 'max:255'],
-            'berupa'     => ['required', 'string', 'max:255'],
+            'judul_ciptaan' => ['required', 'string', 'max:255'],
+            'jenis_cipta' => ['required', 'string', 'max:255'],
+            'jenis_cipta_lainnya' => ['nullable', 'string', 'max:255'],
             'tanggal_pengisian' => ['required', 'date'],
 
             'download_format' => ['required', 'in:pdf,docx'],
@@ -40,10 +41,14 @@ class PernyataanCiptaController extends Controller
 
 
         $tp->setValue('judul_ciptaan', $this->val($data['judul_ciptaan']));
-        $tp->setValue('berupa', $this->val($data['berupa']));
+        $berupa = $data['jenis_cipta'] === 'Lainnya'
+            ? $this->val($data['jenis_cipta_lainnya'] ?? '')
+            : $this->val($data['jenis_cipta']);
+
+        $tp->setValue('berupa', $berupa);
+
         $tgl = Carbon::parse($data['tanggal_pengisian'])->locale('id');
         $tp->setValue('tanggal_pengisian', $tgl->translatedFormat('d F Y'));
-
         $out = tempnam(sys_get_temp_dir(), 'cipta_') . '.docx';
     
         $tp->saveAs($out);
