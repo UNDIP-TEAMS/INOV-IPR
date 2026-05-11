@@ -191,8 +191,8 @@ Route::post('/pemohon/paten/edit-deskripsi-singkat', [PemohonDashboardController
 | PUBLIC ROUTES
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn () => view('welcome'))->name('welcome');
-Route::get('/header', fn () => view('test-header'))->name('test-header');
+Route::view('/', 'test-header')->name('home');
+
 
 Route::get('/hak-paten', fn () => view('hakpaten.menuhakpaten'))->name('menuhakpaten');
 
