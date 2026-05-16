@@ -9,6 +9,7 @@ use App\Models\HakCipta;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class SkemaController extends Controller
 {
@@ -131,10 +132,18 @@ class SkemaController extends Controller
             'download_format'   => ['required', 'in:pdf,docx'],   // <--- baru
         ]);
 
-        $templatePath = public_path('templates/Surat Pernyatan TKT 7-9.docx');
-        if (!file_exists($templatePath)) {
-            abort(500, 'Template DOCX tidak ditemukan: ' . $templatePath);
+        $templateObjectPath = 'Surat Pernyatan TKT 7-9.docx';
+
+        if (!Storage::disk('s3')->exists($templateObjectPath)) {
+            abort(500, 'Template DOCX tidak ditemukan di bucket: ' . $templateObjectPath);
         }
+
+        $templatePath = tempnam(sys_get_temp_dir(), 'template_tkt_') . '.docx';
+
+        file_put_contents(
+            $templatePath,
+            Storage::disk('s3')->get($templateObjectPath)
+        );
 
         $tp = new TemplateProcessor($templatePath);
 
@@ -223,7 +232,7 @@ class SkemaController extends Controller
     $ext  = $file->getClientOriginalExtension();
     $filename = $noPendaftaran . '_skema_tkt_' . uniqid() . '.' . $ext;
 
-    $path = $file->storeAs($storeDir, $filename, 'public');
+    $path = $file->storeAs($storeDir, $filename, 's3');
 
     $updateModel($path);
 

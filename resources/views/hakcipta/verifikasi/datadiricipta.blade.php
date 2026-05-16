@@ -345,7 +345,15 @@
       {{-- SKEMA (PALING BAWAH) --}}
       <div class="field field-full">
         <label class="label">Dihasilkan dari Skema Penelitian? <span class="req">*</span></label>
-        <img src="/images/Skema%20Penelitian.jpg" class="skema-img" alt="Skema">
+        @php
+        $skemaImgUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Skema Penelitian.jpg');
+        @endphp
+
+        <img 
+          src="{{ $skemaImgUrl }}" 
+          class="skema-img" 
+          alt="Skema"
+        >
 
         <select class="input input-full" id="skema_penelitian" name="skema_penelitian" required>
           <option value="" disabled {{ old('skema_penelitian', data_get($verifSession, 'skema_penelitian', data_get($data, 'skema_penelitian'))) ? '' : 'selected' }}>

@@ -5,15 +5,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class PengalihanHakCiptaController extends Controller
 {
     private function pickTemplate(int $jumlah): string
     {
-        if ($jumlah >= 1 && $jumlah <= 7)  return public_path('templates/pengalihan hak CIPTA 1-8.docx');
-        if ($jumlah >= 8 && $jumlah <= 14) return public_path('templates/pengalihan hak CIPTA 9-14.docx');
+        if ($jumlah >= 1 && $jumlah <= 7) {
+            $templateObjectPath = 'pengalihan hak CIPTA 1-8.docx';
+        } elseif ($jumlah >= 8 && $jumlah <= 14) {
+            $templateObjectPath = 'pengalihan hak CIPTA 9-14.docx';
+        } else {
+            abort(422, 'Jumlah inventor tidak didukung template.');
+        }
 
-        abort(422, 'Jumlah inventor tidak didukung template.');
+        if (!Storage::disk('s3')->exists($templateObjectPath)) {
+            abort(500, 'Template DOCX tidak ditemukan di bucket: ' . $templateObjectPath);
+        }
+
+        $templatePath = tempnam(sys_get_temp_dir(), 'template_pengalihan_cipta_') . '.docx';
+
+        file_put_contents(
+            $templatePath,
+            Storage::disk('s3')->get($templateObjectPath)
+        );
+
+        return $templatePath;
     }
 
     private function val($v): string

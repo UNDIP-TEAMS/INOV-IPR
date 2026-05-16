@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 
 class IsiformController extends Controller
@@ -86,11 +87,19 @@ class IsiformController extends Controller
                 return back()->with('success', 'OK')->withInput();
             }
 
-        // ===== TEMPLATE PATH =====
-        $templatePath = public_path('templates/Form Daftar Paten (2025).docx');
-        if (!file_exists($templatePath)) {
-            abort(500, 'Template DOCX tidak ditemukan: ' . $templatePath);
+        // ===== TEMPLATE PATH DARI BUCKET =====
+        $templateObjectPath = 'Form Daftar Paten (2025).docx';
+
+        if (!Storage::disk('s3')->exists($templateObjectPath)) {
+            abort(500, 'Template DOCX tidak ditemukan di bucket: ' . $templateObjectPath);
         }
+
+        $templatePath = tempnam(sys_get_temp_dir(), 'template_paten_') . '.docx';
+
+        file_put_contents(
+            $templatePath,
+            Storage::disk('s3')->get($templateObjectPath)
+        );
 
         $tp = new TemplateProcessor($templatePath);
 

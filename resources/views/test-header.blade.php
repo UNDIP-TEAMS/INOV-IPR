@@ -6,7 +6,13 @@
 
 <div class="content-y">
   <div class="hero">
-  <img src="{{ asset('images/bg2.jpg') }}" class="hero-img" alt="gedung">
+  @php
+use Illuminate\Support\Facades\Storage;
+
+$bgUrl = Storage::disk('s3')->url('bg2.jpg');
+@endphp
+
+<img src="{{ $bgUrl }}" class="hero-img" alt="gedung">
 
   <div class="hero-text">
     <h1>Selamat Datang</h1>
@@ -85,7 +91,12 @@
     </div>
   </div>
   <div class="container-catatan-awal">
-    <img src="{{ asset('images/lampu.svg') }}" class="lampu-img" alt="lampu">
+    @php
+
+$lampuUrl = Storage::disk('s3')->url('lampu.svg');
+@endphp
+
+<img src="{{ $lampuUrl }}" class="lampu-img" alt="lampu">
     <div class="container-catatan">
         <h3>Catatan: </h3>
         <p>1. Semua dokumen yang dibutuhkan dapat diunduh dan diisi sesuai dengan data yang benar pada menu yang tersedia di atas.</p>

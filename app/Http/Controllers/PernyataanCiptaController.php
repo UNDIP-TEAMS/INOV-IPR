@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class PernyataanCiptaController extends Controller
 {
@@ -32,10 +33,18 @@ class PernyataanCiptaController extends Controller
                 ->with('success', 'Data tersimpan.');
         }
 
-        $templatePath = public_path('templates/Surat Pernyataan Hak Cipta 2021.docx');
-        if (!file_exists($templatePath)) {
-            abort(500, 'Template DOCX tidak ditemukan: ' . $templatePath);
+        $templateObjectPath = 'Surat Pernyataan Hak Cipta 2021.docx';
+
+        if (!Storage::disk('s3')->exists($templateObjectPath)) {
+            abort(500, 'Template DOCX tidak ditemukan di bucket: ' . $templateObjectPath);
         }
+
+        $templatePath = tempnam(sys_get_temp_dir(), 'template_cipta_') . '.docx';
+
+        file_put_contents(
+            $templatePath,
+            Storage::disk('s3')->get($templateObjectPath)
+        );
 
         $tp = new TemplateProcessor($templatePath);
 

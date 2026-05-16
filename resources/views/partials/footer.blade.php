@@ -3,11 +3,16 @@
     <div class="footer__container footer__grid">
 
       <div class="footer__brand">
-        <img
-          src="{{ asset('images/Undip-Logo.png') }}"
-          alt="UNDIP"
-          class="footer__logo"
-        />
+        
+        @php
+$logoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Undip-Logo.png');
+@endphp
+
+<img
+  src="{{ $logoUrl }}"
+  alt="UNDIP"
+  class="footer__logo"
+/>
         <span class="footer__brand-text">Universitas Diponegoro</span>
       </div>
 
@@ -22,21 +27,43 @@
 
           <div class="footer__social">
             <div class="footer__social-item">
-              <img
-                src="{{ asset('images/instagram.png') }}"
-                alt="Instagram"
-                class="footer__social-icon"
-              />
-              <span class="footer__text">@dirinovki.undip</span>
+              @php
+              $instagramUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('instagram.png');
+              @endphp
+
+              <a 
+                href="https://www.instagram.com/dirinovki.undip" 
+                target="_blank"
+                class="footer__social-link"
+              >
+                <img
+                  src="{{ $instagramUrl }}"
+                  alt="Instagram"
+                  class="footer__social-icon"
+                />
+
+                <span class="footer__text">@dirinovki.undip</span>
+              </a>
             </div>
 
             <div class="footer__social-item">
-              <img
-                src="{{ asset('images/youtube.png') }}"
-                alt="YouTube"
-                class="footer__social-icon"
-              />
-              <span class="footer__text">@dirinovkiundip</span>
+              @php
+              $youtubeUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('youtube.png');
+              @endphp
+
+              <a 
+                href="https://www.youtube.com/@dirinovkiundip" 
+                target="_blank"
+                class="footer__social-link"
+              >
+                <img
+                  src="{{ $youtubeUrl }}"
+                  alt="YouTube"
+                  class="footer__social-icon"
+                />
+
+                <span class="footer__text">@dirinovkiundip</span>
+              </a>
             </div>
           </div>
         </div>
@@ -51,18 +78,34 @@
 
           <div class="footer__contact-block">
             WhatsApp Call Center Inovasi:<br />
-            08113805805 (Sentra KI)
+            <a 
+              href="https://wa.me/628113805805"
+              target="_blank"
+              class="footer__link"
+            >
+              08113805805 (Sentra KI)
+            </a>
           </div>
 
           <div class="footer__contact-block">
             WhatsApp Helpdesk Inovasi:<br />
-            08113848555 (Inovasi)
+            <a
+                          href="https://wa.me/628113848555"
+              target="_blank"
+              class="footer__link"
+            >
+               08113848555 (Inovasi)
+            </a>
           </div>
 
           <div class="footer__contact-block">
             Email:<br />
-            dirinovki@gmail.com<br />
-            inovasi@live.undip.ac.id
+            <a 
+              href="mailto:dirinovki@gmail.com"
+              class="footer__link"
+            >
+              dirinovki@gmail.com
+            </a>
           </div>
         </div>
       </div>

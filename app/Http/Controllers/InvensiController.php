@@ -5,14 +5,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class InvensiController extends Controller
 {
     private function pickTemplate(int $jumlah): string
     {
-        if ($jumlah >= 1 && $jumlah <= 4)  return public_path('templates/1-4 invensi.docx');
-        if ($jumlah >= 5 && $jumlah <= 14)  return public_path('templates/5-8 invensi.docx');
-        abort(422, 'Jumlah inventor tidak didukung template.');
+        if ($jumlah >= 1 && $jumlah <= 4) {
+            $templateObjectPath = '1-4 invensi.docx';
+        } elseif ($jumlah >= 5 && $jumlah <= 14) {
+            $templateObjectPath = '5-8 invensi.docx';
+        } else {
+            abort(422, 'Jumlah inventor tidak didukung template.');
+        }
+
+        if (!Storage::disk('s3')->exists($templateObjectPath)) {
+            abort(500, 'Template DOCX tidak ditemukan di bucket: ' . $templateObjectPath);
+        }
+
+        $tempPath = tempnam(sys_get_temp_dir(), 'template_invensi_') . '.docx';
+
+        file_put_contents(
+            $tempPath,
+            Storage::disk('s3')->get($templateObjectPath)
+        );
+
+        return $tempPath;
     }
 
     private function val($v): string

@@ -6,8 +6,23 @@
 
 <div class="hero-layout">
   <div class="bg">
-    <img src="{{ asset('images/logoUNDIP.png') }}" class="img-undip" alt="undip">
-    <img src="{{ asset('images/Logo Dirinovki 2026.jpg') }}" class="hero-img2" alt="dirinovki">
+    @php
+      $undipLogoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('logoUNDIP.png');
+
+      $dirinovkiLogoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Logo Dirinovki 2026.jpg');
+      @endphp
+
+      <img 
+        src="{{ $undipLogoUrl }}" 
+        class="img-undip" 
+        alt="undip"
+      >
+
+      <img 
+        src="{{ $dirinovkiLogoUrl }}" 
+        class="hero-img2" 
+        alt="dirinovki"
+      >
   </div>
 
   <div class="right">

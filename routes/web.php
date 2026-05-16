@@ -33,6 +33,7 @@ use App\Http\Controllers\DuplicatePengalihanHakCiptaController;
 use App\Http\Controllers\DuplicateInvensiController;
 use App\Http\Controllers\DuplicatePengalihanHakController;
 use App\Http\Controllers\DuplicateSkemaController;
+use Illuminate\Support\Facades\Storage;
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
@@ -632,3 +633,18 @@ Route::get('/google/callback', [GoogleAuthController::class, 'callback'])->name(
 Route::get('/login', function () {
     return redirect('/pemohon/login');
 })->name('login');
+
+
+Route::get('/storage-check', function () {
+
+    $path = Storage::disk('s3')->put(
+        'system/check.txt',
+        'storage connected'
+    );
+
+    return [
+        'status' => 'ok',
+        'path' => $path,
+        'url' => Storage::disk('s3')->url($path),
+    ];
+});

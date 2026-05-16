@@ -15,15 +15,29 @@
 
       <div class="brand-group">
         <a href="https://dirinovki.undip.ac.id" class="brand">
-          <img src="{{ asset('images/Logo Dirinovki 2026.jpg') }}" class="brand-logo" alt="Logo">
-        </a>
+         @php
+          $dirinovkiLogoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Logo Dirinovki 2026.jpg');
+          @endphp
+
+          <img 
+            src="{{ $dirinovkiLogoUrl }}" 
+            class="brand-logo" 
+            alt="Logo"
+          >
+          </a>
 
         <span class="brand-sep"></span>
 
-        <a href="https://dirinovki.undip.ac.id" class="brand brand-impact">
-          <img src="{{ asset('images/Dikti-Berdampak-Undip Bermartabat Bermanfaat.png') }}"
+        <a href="https://undip.ac.id/" class="brand brand-impact">
+          @php
+            $impactLogoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Dikti-Berdampak-Undip Bermartabat Bermanfaat.png');
+            @endphp
+
+            <img 
+              src="{{ $impactLogoUrl }}"
               class="brand-logo brand-logo--impact"
-              alt="Logo Undip Berdampak">
+              alt="Logo Undip Berdampak"
+            >
         </a>
       </div>
 
