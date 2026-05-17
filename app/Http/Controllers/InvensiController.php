@@ -126,9 +126,9 @@ class InvensiController extends Controller
      }
 
         // === Convert DOCX 
-        $soffice = 'D:\Program Files\LibreOffice\program\soffice.exe';
+        $soffice = 'C:\Program Files\LibreOffice\program\soffice.exe';
         if (!file_exists($soffice)) {
-            $soffice = 'D:\Program Files (x86)\LibreOffice\program\soffice.exe';
+            $soffice = 'C:\Program Files (x86)\LibreOffice\program\soffice.exe';
         }
         if (!file_exists($soffice)) {
             abort(500, 'soffice.exe tidak ditemukan. Cek instalasi LibreOffice.');

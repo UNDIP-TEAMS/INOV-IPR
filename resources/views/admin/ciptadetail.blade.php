@@ -122,12 +122,12 @@
 
 <header class="admin-header">
   <div class="brand">
-    <img src="{{ asset('images/logo.jpg') }}?v={{ filemtime(public_path('images/logo.jpg')) }}" alt="Logo">
+    <img src="{{ Storage::disk('s3')->url('logo.jpg') }}" alt="Logo">
   </div>
 
   <div class="header-actions">
     <a href="{{ $notifUrl }}" class="notif-icon-btn" title="Notif Revisi">
-      <img src="{{ asset('images/notif.png') }}" alt="Notif" class="notif-ic">
+      <img src="{{ Storage::disk('s3')->url('notif.png') }}" alt="Notif" class="notif-ic">
       @if($notifCount > 0)
         <span class="notif-badge">{{ $notifCount }}</span>
       @endif
@@ -135,7 +135,7 @@
 
     <div class="user-dd" id="userDD">
       <button type="button" class="user-icon" id="userBtn" aria-haspopup="true" aria-expanded="false">
-        <img src="{{ asset('images/user.png') }}" alt="User">
+        <img src="{{ Storage::disk('s3')->url('user.png') }}" alt="User">
       </button>
 
       <div class="user-menu" id="userMenu" hidden>
@@ -150,7 +150,7 @@
     </div>
 
     <button type="button" class="logout-btn" id="openLogoutModal" aria-label="Logout">
-      <img src="{{ asset('images/logout.png') }}" alt="Logout">
+      <img src="{{ Storage::disk('s3')->url('logout.png') }}" alt="Logout">
     </button>
   </div>
 </header>
@@ -164,19 +164,19 @@
   <aside class="dash-sidebar">
     <a class="side-link {{ $tab==='stats' ? 'active' : '' }}"
        href="{{ route('admin.dashboard', ['tab'=>'stats']) }}">
-      <img class="side-ic-img" src="{{ asset('images/statistik.png') }}" alt="">
+      <img class="side-ic-img" src="{{ Storage::disk('s3')->url('statistik.png') }}" alt="">
       Statistik Analisis
     </a>
 
     <a class="side-link {{ $tab==='cipta' ? 'active' : '' }}"
        href="{{ route('admin.dashboard', ['tab'=>'cipta']) }}">
-      <img class="side-ic-img" src="{{ asset('images/dokumen.png') }}" alt="">
+      <img class="side-ic-img" src="{{ Storage::disk('s3')->url('dokumen.png') }}" alt="">
       Data Hak Cipta
     </a>
 
     <a class="side-link {{ $tab==='paten' ? 'active' : '' }}"
        href="{{ route('admin.dashboard', ['tab'=>'paten']) }}">
-      <img class="side-ic-img" src="{{ asset('images/dokumen.png') }}" alt="">
+      <img class="side-ic-img" src="{{ Storage::disk('s3')->url('dokumen.png') }}" alt="">
       Data Paten
     </a>
   </aside>
@@ -417,7 +417,7 @@
                         @endphp
 
                         <a class="doc-link doc-link-full"
-                          href="{{ asset('storage/'.$filePath) }}"
+                           href="{{ route('admin.cipta.doc.download', ['id' => $row->id, 'doc_key' => $k]) }}"
                           target="_blank"
                           title="{{ $displayName }}">
                           {{ $displayName }}
@@ -485,7 +485,7 @@
                         @if(!empty(optional($doc)->admin_attachment_path))
                           <div style="margin-top:6px; font-size:12px;">
                             Lampiran admin:
-                            <a href="{{ asset('storage/'.optional($doc)->admin_attachment_path) }}" target="_blank">
+                            <a href="{{ Storage::disk('s3')->url(optional($doc)->admin_attachment_path) }}" target="_blank">
                               {{ basename(optional($doc)->admin_attachment_path) }}
                             </a>
                           </div>

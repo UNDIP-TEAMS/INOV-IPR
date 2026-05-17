@@ -156,7 +156,7 @@ class PatenVerifController extends Controller
         'surat_kepemilikan',
         'surat_pengalihan',
         'scan_ktp',
-        'gambar_prototipe',
+        'gambar_prototipe', 
         'deskripsi_singkat_prototipe',
     ] as $field) {
         $payload[$field] = '';
@@ -376,8 +376,14 @@ private function getPrevRouteForUpload(PatenVerif $verif): string
     ]);
 
     $path = $this->storeUploadedOriginalName($request, 'verif/draft');
+    $driveService = new \App\Services\GoogleDriveOAuthService('paten');
+    $absolutePath = Storage::disk('public')->path($path);
+    $driveUrl = $driveService->uploadFile($absolutePath, basename($path));
 
-    $verif->update(['draft_paten' => $path]);
+    $verif->update([
+        'draft_paten' => $path,
+        'draft_paten_drive_url' => $driveUrl,
+    ]);
 
     return redirect()
 ->route('patenverif.all', $verif->id)
@@ -473,7 +479,14 @@ public function deskripsiprodukverif(PatenVerif $verif){
 
     $path = $this->storeUploadedOriginalName($request, 'verif/form_permohonan');
 
-    $verif->update(['form_permohonan' => $path]);
+    $driveService = new \App\Services\GoogleDriveOAuthService('paten');
+    $absolutePath = Storage::disk('public')->path($path);
+    $driveUrl = $driveService->uploadFile($absolutePath, basename($path));
+
+    $verif->update([
+        'form_permohonan' => $path,
+        'form_permohonan_drive_url' => $driveUrl,
+    ]);
 
    return redirect()
 ->route('patenverif.all', $verif->id)
@@ -489,7 +502,14 @@ public function deskripsiprodukverif(PatenVerif $verif){
 
     $path = $this->storeUploadedOriginalName($request, 'verif/surat_kepemilikan');
 
-    $verif->update(['surat_kepemilikan' => $path]);
+    $driveService = new \App\Services\GoogleDriveOAuthService('paten');
+    $absolutePath = Storage::disk('public')->path($path);
+    $driveUrl = $driveService->uploadFile($absolutePath, basename($path));
+
+    $verif->update([
+        'surat_kepemilikan' => $path,
+        'surat_kepemilikan_drive_url' => $driveUrl,
+    ]);
 
     return redirect()
 ->route('patenverif.all', $verif->id)
@@ -504,7 +524,14 @@ public function deskripsiprodukverif(PatenVerif $verif){
 
     $path = $this->storeUploadedOriginalName($request, 'verif/surat_pengalihan');
 
-    $verif->update(['surat_pengalihan' => $path]);
+    $driveService = new \App\Services\GoogleDriveOAuthService('paten');
+    $absolutePath = Storage::disk('public')->path($path);
+    $driveUrl = $driveService->uploadFile($absolutePath, basename($path));
+
+    $verif->update([
+        'surat_pengalihan' => $path,
+        'surat_pengalihan_drive_url' => $driveUrl,
+    ]);
 
     return redirect()
 ->route('patenverif.all', $verif->id)
@@ -522,9 +549,16 @@ public function deskripsiprodukverif(PatenVerif $verif){
     $original = $file->getClientOriginalName();
     $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
 
-    $path = $file->storeAs('verif/scan_ktp', $safeName, 'public');
+    $path = $this->storeUploadedOriginalName($request, 'verif/scan_ktp');
 
-    $verif->update(['scan_ktp' => $path]);
+    $driveService = new \App\Services\GoogleDriveOAuthService('paten');
+    $absolutePath = Storage::disk('public')->path($path);
+    $driveUrl = $driveService->uploadFile($absolutePath, basename($path));
+
+    $verif->update([
+        'scan_ktp' => $path,
+        'scan_ktp_drive_url' => $driveUrl,
+    ]);
 
     return redirect()
 ->route('patenverif.all', $verif->id)
@@ -543,9 +577,16 @@ public function deskripsiprodukverif(PatenVerif $verif){
         $original = $file->getClientOriginalName();
         $safeName = preg_replace('/[^A-Za-z0-9._-]/', '_', $original);
 
-        $path = $file->storeAs('verif/gambar_prototipe', $safeName, 'public');
+        $path = $this->storeUploadedOriginalName($request, 'verif/gambar_prototipe');
 
-        $verif->update(['gambar_prototipe' => $path]);
+        $driveService = new \App\Services\GoogleDriveOAuthService('paten');
+        $absolutePath = Storage::disk('public')->path($path);
+        $driveUrl = $driveService->uploadFile($absolutePath, basename($path));
+
+        $verif->update([
+            'gambar_prototipe' => $path,
+            'gambar_prototipe_drive_url' => $driveUrl,
+        ]);
     }
 
     return redirect()

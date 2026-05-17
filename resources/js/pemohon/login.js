@@ -74,7 +74,7 @@ if (modalUsername) {
 
     ownerEmailTimer = setTimeout(() => {
       loadOwnerEmail();
-    }, 300); // jeda 300ms setelah user berhenti ngetik
+    }, 300); 
   });
 }
 

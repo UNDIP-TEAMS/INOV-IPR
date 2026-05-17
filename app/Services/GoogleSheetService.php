@@ -132,12 +132,7 @@ $this->spreadsheetPatenId = env('GOOGLE_SHEET_PATEN_ID');
         $scanKtp          = $getRev('scan_ktp');
         $gambarPrototipe  = $getRev('gambar_prototipe');
 
-        $toPublicUrl = function ($path) {
-            if (!$path) return '';
-            $path = ltrim((string) $path, '/');
-            $path = preg_replace('#^storage/#', '', $path);
-            return asset('storage/' . $path);
-        };
+        
 
         $inventors = is_string($verif->inventors)
             ? json_decode($verif->inventors, true) ?? []
@@ -149,38 +144,39 @@ $this->spreadsheetPatenId = env('GOOGLE_SHEET_PATEN_ID');
         $email = collect($inventors)->pluck('email')->join(', ') ?: (string) $verif->email;
         $noHp = collect($inventors)->pluck('no_hp')->join(', ') ?: (string) $verif->no_hp;
 
-        $draftPatenPath       = $draftPaten?->pemohon_file_path ?: $verif->draft_paten;
-        $formPermohonanPath   = $formPermohonan?->pemohon_file_path ?: $verif->form_permohonan;
-        $suratKepemilikanPath = $suratKepemilikan?->pemohon_file_path ?: $verif->surat_kepemilikan;
-        $suratPengalihanPath  = $suratPengalihan?->pemohon_file_path ?: $verif->surat_pengalihan;
-        $scanKtpPath          = $scanKtp?->pemohon_file_path ?: $verif->scan_ktp;
-        $gambarPrototipePath  = $gambarPrototipe?->pemohon_file_path ?: $verif->gambar_prototipe;
-        
+        $draftPatenUrl       = $verif->draft_paten_drive_url ?? '';
+$formPermohonanUrl   = $verif->form_permohonan_drive_url ?? '';
+$suratKepemilikanUrl = $verif->surat_kepemilikan_drive_url ?? '';
+$suratPengalihanUrl  = $verif->surat_pengalihan_drive_url ?? '';
+$scanKtpUrl          = $verif->scan_ktp_drive_url ?? '';
+$gambarPrototipeUrl  = $verif->gambar_prototipe_drive_url ?? '';
 
-        $values = [[
-        now()->timezone('Asia/Jakarta')->format('n/j/Y H:i:s'),
-        (string) $verif->jenis_paten,
-        (string) $verif->judul_paten,
-        (string) $nama,
-        (string) $nipNim,
-        (string) $fakultas,
-        (string) $noHp,
-        (string) $email,
-        (string) $verif->prototipe,
-        (string) $verif->nilai_perolehan,
-        (string) $verif->sumber_dana,
-        (string) $verif->skema_penelitian,
+$values = [[
+    now()->timezone('Asia/Jakarta')->format('n/j/Y H:i:s'),
+    (string) $verif->jenis_paten,
+    (string) $verif->judul_paten,
+    (string) $nama,
+    (string) $nipNim,
+    (string) $fakultas,
+    (string) $noHp,
+    (string) $email,
+    (string) $verif->prototipe,
+    (string) $verif->nilai_perolehan,
+    (string) $verif->sumber_dana,
+    (string) $verif->skema_penelitian,
 
-        $toPublicUrl($draftPatenPath),
-        $toPublicUrl($formPermohonanPath),
-        $toPublicUrl($suratKepemilikanPath),
-        $toPublicUrl($suratPengalihanPath),
-        $toPublicUrl($scanKtpPath),
+    $draftPatenUrl,
+    $formPermohonanUrl,
+    $suratKepemilikanUrl,
+    $suratPengalihanUrl,
+    $scanKtpUrl,
 
-        '', 
-        $toPublicUrl($gambarPrototipePath),
-        (string) $verif->deskripsi_singkat_prototipe,
-    ]];
+    '',
+
+    $gambarPrototipeUrl,
+
+    (string) $verif->deskripsi_singkat_prototipe,
+]];
 
         $body = new ValueRange([
             'majorDimension' => 'ROWS',

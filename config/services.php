@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'google_cipta' => [
+        'client_id' => env('GOOGLE_CLIENT_CIPTA_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
+    'google_paten' => [
+        'client_id' => env('GOOGLE_CLIENT_PATEN_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
 ];
+

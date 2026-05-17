@@ -195,7 +195,6 @@ Route::post('/pemohon/paten/edit-deskripsi-singkat', [PemohonDashboardController
 
 Route::view('/', 'test-header')->name('home');
 
-
 Route::get('/hak-paten', fn () => view('hakpaten.menuhakpaten'))->name('menuhakpaten');
 
 Route::get('/hak-cipta/form', fn () => view('hakcipta.menucipta'))->name('menucipta');
