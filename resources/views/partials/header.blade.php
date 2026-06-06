@@ -15,14 +15,14 @@
 
       <div class="brand-group">
         <a href="https://dirinovki.undip.ac.id" class="brand">
-          <img src="{{ asset('images/Logo-Dirinovki-2026.jpg') }}" class="brand-logo" alt="Logo">
-        </a>
+          <img src="{{ Storage::disk('s3')->url('Logo-Dirinovki-2026.jpg') }}" class="brand-logo"
+  alt="Logo Undip">
+          </a>
 
         <span class="brand-sep"></span>
 
-        <a href="https://dirinovki.undip.ac.id" class="brand brand-impact">
-          <img src="{{ asset('images/Dikti-Berdampak-Undip-Bermartabat-Bermanfaat.png') }}"
-              class="brand-logo brand-logo--impact"
+        <a href="https://undip.ac.id/" class="brand brand-impact">
+             <img src="{{ Storage::disk('s3')->url('Dikti-Berdampak-Undip-Bermartabat-Bermanfaat.png') }}" class="brand-logo brand-logo--impact"
               alt="Logo Undip Berdampak">
         </a>
       </div>

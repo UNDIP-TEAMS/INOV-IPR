@@ -6,11 +6,11 @@
 
 <div class="content-y">
   <div class="hero">
-  <img src="{{ asset('images/bg2.jpg') }}" class="hero-img" alt="gedung">
 
+<img src="{{ Storage::disk('s3')->url('bg2.jpg') }}" class="hero-img" alt="gedung">
   <div class="hero-text">
     <h1>Selamat Datang</h1>
-    <h2>di KI Hub Universitas Diponegoro</h2>
+    <h2>di IPRHub Universitas Diponegoro</h2>
   </div>
 </div>
 
@@ -52,10 +52,10 @@
 
     <!-- CARD PUTIH DI TENGAH GAMBAR -->
   <div class="hero-card">
-    <h1>Tentang KI Hub</h1>
+    <h1>Tentang IPRHub</h1>
     <p>
-       KI Hub adalah pusat layanan terpadu pengelolaan Kekayaan Intelektual yang dirancang untuk mendukung dosen dan mahasiswa dalam melindungi serta mengelola hasil inovasi dan riset.<br>
-      Melalui KI Hub, proses pengajuan kekayaan intelektual menjadi lebih terstruktur, transparan, dan terdokumentasi dengan baik. <br>
+       IPRHub adalah pusat layanan terpadu pengelolaan Kekayaan Intelektual yang dirancang untuk mendukung dosen dan mahasiswa dalam melindungi serta mengelola hasil inovasi dan riset.<br>
+      Melalui IPRHub, proses pengajuan kekayaan intelektual menjadi lebih terstruktur, transparan, dan terdokumentasi dengan baik. <br>
       Website ini hadir sebagai jembatan antara inovator dan sistem perlindungan hukum, sehingga setiap karya memiliki nilai, kepastian, dan dampak berkelanjutan.
     </p>
   </div>
@@ -70,7 +70,7 @@
   <div class="container-langkah">
     <div class="container-langkah-langkah">
         <h3>Langkah-Langkah Pendaftaran Paten / Hak Cipta</h3>
-        <p>1. Pemohon mengakses website KI Hub dan mengisi formulir pengajuan Paten atau Hak Cipta sesuai dengan persyaratan yang tertera pada menu yang tersedia.</p>
+        <p>1. Pemohon mengakses website IPRHub dan mengisi formulir pengajuan Paten atau Hak Cipta sesuai dengan persyaratan yang tertera pada menu yang tersedia.</p>
         <p>2. Berkas pengajuan akan diverifikasi oleh Admin. Pemohon dimohon untuk menunggu hingga status pengajuan dinyatakan disetujui (approved).</p>
         <p>3. Setelah pengajuan disetujui oleh Admin, pemohon mencetak (print) draft Paten/Hak Cipta yang telah diisi (tanpa meterai dan tanpa tanda tangan), kemudian mengajukannya ke Bagian Innovation Hub, Gedung UPT Perpustakaan Lantai 5 untuk dilakukan verifikasi kelengkapan berkas.
 <br>(mohon membawa laptop untuk koreksi di tempat apabila diperlukan).</p>
@@ -85,7 +85,8 @@
     </div>
   </div>
   <div class="container-catatan-awal">
-    <img src="{{ asset('images/lampu.svg') }}" class="lampu-img" alt="lampu">
+
+ <img src="{{ Storage::disk('s3')->url('lampu.svg') }}" class="lampu-img" alt="lampu">
     <div class="container-catatan">
         <h3>Catatan: </h3>
         <p>1. Semua dokumen yang dibutuhkan dapat diunduh dan diisi sesuai dengan data yang benar pada menu yang tersedia di atas.</p>
@@ -100,3 +101,4 @@
   </div>
 </div>
 @endsection
+
