@@ -5,7 +5,8 @@
       <div class="footer__brand">
         
 
-<img src="{{ Storage::disk('s3')->url('Undip-Logo.png') }}">
+<img src="{{ Storage::disk('s3')->url('Undip-Logo.png') }}" class="footer__logo"
+  alt="Logo Undip">
         <span class="footer__brand-text">Universitas Diponegoro</span>
       </div>
 
