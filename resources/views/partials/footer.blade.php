@@ -3,10 +3,11 @@
     <div class="footer__container footer__grid">
 
       <div class="footer__brand">
-        
-
-<img src="{{ Storage::disk('s3')->url('Undip-Logo.png') }}" class="footer__logo"
-  alt="Logo Undip">
+        <img
+          src="{{ asset('images/Undip-Logo.png') }}"
+          alt="UNDIP"
+          class="footer__logo"
+        />
         <span class="footer__brand-text">Universitas Diponegoro</span>
       </div>
 
@@ -21,33 +22,21 @@
 
           <div class="footer__social">
             <div class="footer__social-item">
-
-              <a 
-                href="https://www.instagram.com/dirinovki.undip" 
-                target="_blank"
-                class="footer__social-link"
-              >
-                <img src="{{ Storage::disk('s3')->url('instagram.png') }}" alt="Instagram"
-                  class="footer__social-icon">
-
-
-                <span class="footer__text">@dirinovki.undip</span>
-              </a>
+              <img
+                src="{{ asset('images/instagram.png') }}"
+                alt="Instagram"
+                class="footer__social-icon"
+              />
+              <span class="footer__text">@dirinovki.undip</span>
             </div>
 
             <div class="footer__social-item">
-          
-              <a 
-                href="https://www.youtube.com/@dirinovkiundip" 
-                target="_blank"
-                class="footer__social-link"
-              >
-
-              <img src="{{ Storage::disk('s3')->url('youtube.png') }}" alt="YouTube"
-                  class="footer__social-icon">
-
-                <span class="footer__text">@dirinovkiundip</span>
-              </a>
+              <img
+                src="{{ asset('images/youtube.png') }}"
+                alt="YouTube"
+                class="footer__social-icon"
+              />
+              <span class="footer__text">@dirinovkiundip</span>
             </div>
           </div>
         </div>
@@ -62,34 +51,18 @@
 
           <div class="footer__contact-block">
             WhatsApp Call Center Inovasi:<br />
-            <a 
-              href="https://wa.me/628113805805"
-              target="_blank"
-              class="footer__link"
-            >
-              08113805805 (Sentra KI)
-            </a>
+            08113805805 (Sentra KI)
           </div>
 
           <div class="footer__contact-block">
             WhatsApp Helpdesk Inovasi:<br />
-            <a
-                          href="https://wa.me/628113848555"
-              target="_blank"
-              class="footer__link"
-            >
-               08113848555 (Inovasi)
-            </a>
+            08113848555 (Inovasi)
           </div>
 
           <div class="footer__contact-block">
             Email:<br />
-            <a 
-              href="mailto:dirinovki@gmail.com"
-              class="footer__link"
-            >
-              dirinovki@gmail.com
-            </a>
+            dirinovki@gmail.com<br />
+            inovasi@live.undip.ac.id
           </div>
         </div>
       </div>

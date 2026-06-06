@@ -11,7 +11,6 @@
 
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   
-  
   <script src="{{ asset('js/nextbutton.js') }}?v={{ time() }}" defer></script>
 </head>
 
