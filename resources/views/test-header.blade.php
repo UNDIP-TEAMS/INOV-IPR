@@ -6,14 +6,8 @@
 
 <div class="content-y">
   <div class="hero">
-  @php
-use Illuminate\Support\Facades\Storage;
 
-$bgUrl = Storage::disk('s3')->url('bg2.jpg');
-@endphp
-
-<img src="{{ $bgUrl }}" class="hero-img" alt="gedung">
-
+<img src="{{ Storage::disk('s3')->url('bg2.jpg') }}" class="hero-img" alt="gedung">
   <div class="hero-text">
     <h1>Selamat Datang</h1>
     <h2>di IPRHub Universitas Diponegoro</h2>
@@ -91,12 +85,8 @@ $bgUrl = Storage::disk('s3')->url('bg2.jpg');
     </div>
   </div>
   <div class="container-catatan-awal">
-    @php
 
-$lampuUrl = Storage::disk('s3')->url('lampu.svg');
-@endphp
-
-<img src="{{ $lampuUrl }}" class="lampu-img" alt="lampu">
+ <img src="{{ Storage::disk('s3')->url('lampu.svg') }}" class="lampu-img" alt="lampu">
     <div class="container-catatan">
         <h3>Catatan: </h3>
         <p>1. Semua dokumen yang dibutuhkan dapat diunduh dan diisi sesuai dengan data yang benar pada menu yang tersedia di atas.</p>

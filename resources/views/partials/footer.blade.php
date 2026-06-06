@@ -4,15 +4,8 @@
 
       <div class="footer__brand">
         
-        @php
-$logoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Undip-Logo.png');
-@endphp
 
-<img
-  src="{{ $logoUrl }}"
-  alt="UNDIP"
-  class="footer__logo"
-/>
+<img src="{{ Storage::disk('s3')->url('Undip-Logo.png') }}">
         <span class="footer__brand-text">Universitas Diponegoro</span>
       </div>
 
@@ -27,40 +20,30 @@ $logoUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('Undip-Logo.png'
 
           <div class="footer__social">
             <div class="footer__social-item">
-              @php
-              $instagramUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('instagram.png');
-              @endphp
 
               <a 
                 href="https://www.instagram.com/dirinovki.undip" 
                 target="_blank"
                 class="footer__social-link"
               >
-                <img
-                  src="{{ $instagramUrl }}"
-                  alt="Instagram"
-                  class="footer__social-icon"
-                />
+                <img src="{{ Storage::disk('s3')->url('instagram.png') }}" alt="Instagram"
+                  class="footer__social-icon">
+
 
                 <span class="footer__text">@dirinovki.undip</span>
               </a>
             </div>
 
             <div class="footer__social-item">
-              @php
-              $youtubeUrl = \Illuminate\Support\Facades\Storage::disk('s3')->url('youtube.png');
-              @endphp
-
+          
               <a 
                 href="https://www.youtube.com/@dirinovkiundip" 
                 target="_blank"
                 class="footer__social-link"
               >
-                <img
-                  src="{{ $youtubeUrl }}"
-                  alt="YouTube"
-                  class="footer__social-icon"
-                />
+
+              <img src="{{ Storage::disk('s3')->url('youtube.png') }}" alt="YouTube"
+                  class="footer__social-icon">
 
                 <span class="footer__text">@dirinovkiundip</span>
               </a>
