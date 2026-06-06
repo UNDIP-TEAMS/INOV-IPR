@@ -8,6 +8,9 @@
   
 ])
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
 
 @section('content')
 
@@ -197,7 +200,7 @@
           <tr>
             <th style="width:60px;">No</th>
             <th style="width:40%;">Nama Dokumen</th>
-            <th>File / Teks</th>
+            <th>File</th>
           </tr>
         </thead>
 
@@ -319,7 +322,6 @@
 
           <div id="boxRevisi" class="pd-revisi-box" style="display:none; margin-top:10px;">
 
-            {{-- ✅ TABEL AKTIF CUMA PAS STATUS = REVISI --}}
             @if(($status ?? '') === 'revisi')
               <div class="pd-revisi-title">Dokumen yang Perlu Direvisi</div>
 
@@ -387,14 +389,14 @@
               </td>
 
               <td class="pd-td-center">
-          @if($adminFile)
-            <a href="{{ asset('storage/'.$adminFile) }}" target="_blank" class="pd-action-link">
-              Download
-            </a>
-          @else
-            <span class="pd-dash">-</span>
-          @endif
-        </td> {{-- ✅ tutup dengan benar --}}
+                @if(!empty($adminFile))
+                  <a href="{{ Storage::disk('s3')->url($adminFile) }}" target="_blank">
+                    Download
+                  </a>
+                @else
+                  <span class="pd-dash">-</span>
+                @endif
+              </td>
 
         <td class="pd-td-center">
           @if($isTextDoc)
@@ -563,8 +565,10 @@
               </td>
 
               <td class="pd-td-center">
-                @if($adminFile2)
-                  <a href="{{ asset('storage/'.$adminFile2) }}" target="_blank" class="pd-action-link">Download</a>
+                @if(!empty($adminFile))
+                  <a href="{{ Storage::disk('s3')->url($adminFile) }}" target="_blank">
+                    Download
+                  </a>
                 @else
                   <span class="pd-dash">-</span>
                 @endif
@@ -596,8 +600,7 @@
                   @endif
                 @else
                   @if($pemohonFile2)
-                    <a href="{{ route('revisi.download', ['id' => $h->id]) }}"
-                      class="pd-action-link">
+                    <a href="{{ Storage::disk('s3')->url($pemohonFile2) }}" class="pd-action-link">
                       {{ $h->pemohon_file_name_display ?? $h->pemohon_file_name ?? 'Lihat File' }}
                     </a>
                   @else
@@ -605,6 +608,7 @@
                   @endif
                 @endif
               </td>
+              
             </tr>
           @empty
             <tr><td colspan="5">Belum ada riwayat revisi.</td></tr>
@@ -626,11 +630,6 @@
                   $tt = $sv->tanda_terima_pdf ?? null; 
                 @endphp
 
-                @php
-                  $isApprove = ($status === 'approve');
-                  $tt = $sv->tanda_terima_pdf ?? null;
-                @endphp
-
                 <div class="pd-approve-actions" style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
                   @if($isApprove && $tt)
                     <a class="pd-mini-btn primary"
@@ -645,11 +644,11 @@
                   {{-- PENDAFTARAN --}}
                   @if($isApprove)
                     <a
-  href="{{ route('pemohon.pendaftaran.kirim', ['type' => $pengajuan->type, 'ref' => $pengajuan->id]) }}"
-  class="pd-mini-btn outline"
->
-  Pendaftaran
-</a>
+                      href="{{ route('pemohon.pendaftaran.kirim', ['type' => $pengajuan->type, 'ref' => $pengajuan->id]) }}"
+                      class="pd-mini-btn outline btnPendaftaran"
+                    >
+                      Pendaftaran
+                    </a>
                   @else
                     <button class="pd-mini-btn outline" disabled>
                       Pendaftaran

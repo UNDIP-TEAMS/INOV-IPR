@@ -159,16 +159,17 @@ $uraianData = old('uraian',
       </div>
 
       <div class="field">
-        <label class="label">Link Ciptaan <span class="req">*</span></label>
-        <input
-            type="url"
-            class="input"
-            name="link_ciptaan"
-            placeholder="Contoh: https://drive.google.com/..."
-            value="{{ $linkData }}"
-            form="dupCiptaForm"
-            required
-        >
+        <label class="label">Link Ciptaan </label>
+          <p class="hint">Isi jika memilih jenis cipta <strong>karya rekaman video</strong></p>
+
+          <input
+              type="url"
+              class="input"
+              name="link_ciptaan"
+              placeholder="Contoh: https://drive.google.com/..."
+              value="{{ $linkData }}"
+              form="dupCiptaForm"
+          >
         @error('link_ciptaan') <small class="err">{{ $message }}</small> @enderror
       </div>
 
@@ -187,18 +188,52 @@ $uraianData = old('uraian',
       </div>
 
       <div class="field span-2">
-        <label class="label">Produk Ciptaan Berupa? <span class="req">*</span></label>
-        <input
-            type="text"
-            class="input"
-            name="berupa"
-            placeholder="Produk ciptaan berupa..."
-            value="{{ $berupaData }}"
-            form="dupCiptaForm"
-            required
-        >
-        @error('berupa') <small class="err">{{ $message }}</small> @enderror
-      </div>
+    <label class="label">Tempat Diumumkan Ciptaan <span class="req">*</span></label>
+    <p class="hint">Tempat dimana ciptaan pertama kali diumumkan</p>
+
+    <input
+        type="text"
+        class="input"
+        name="tempatpertama"
+        placeholder="Contoh: Jakarta"
+        value="{{ old('tempatpertama',
+            $refForm['tempatpertama']
+            ?? $generalForm['tempatpertama']
+            ?? ($data['tempatpertama'] ?? '')
+        ) }}"
+        form="dupCiptaForm"
+        required
+    >
+
+    @error('tempatpertama')
+        <small class="err">{{ $message }}</small>
+    @enderror
+</div>
+
+<div class="field">
+    <label class="label">Tanggal Ciptaan Diumumkan <span class="req">*</span></label>
+
+    <p class="hint">
+        Tanggal dimana ciptaan pertama kali diumumkan
+    </p>
+
+    <input
+        type="date"
+        class="input"
+        name="tanggal_pertama"
+        value="{{ old('tanggal_pertama',
+            $refForm['tanggal_pertama']
+            ?? $generalForm['tanggal_pertama']
+            ?? now()->format('Y-m-d')
+        ) }}"
+        form="dupCiptaForm"
+        required
+    >
+
+    @error('tanggal_pertama')
+        <small class="err">{{ $message }}</small>
+    @enderror
+</div>
 
       <div class="field">
         <label class="label">Tanggal Pengisian <span class="req">*</span></label>

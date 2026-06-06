@@ -12,7 +12,7 @@ class GoogleDriveOAuthService
 {
     protected Drive $drive;
 
-    public function __construct()
+    public function __construct(string $type = 'cipta')
     {
         if (!Storage::disk('local')->exists('google_drive_token.json')) {
             throw new \Exception('Akun Google belum terhubung.');
@@ -28,12 +28,15 @@ class GoogleDriveOAuthService
         }
 
         $client = new Client();
-        $client->setClientId(env('GOOGLE_CLIENT_ID'));
-        $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));
+        if ($type === 'cipta') {
+            $client->setClientId(config('services.google_cipta.client_id'));
+        } else {
+            $client->setClientId(config('services.google_paten.client_id'));
+        }
+        $client->setClientSecret(config('services.google_cipta.client_secret'));
+        $client->setRedirectUri(config('services.google_cipta.redirect'));
         $client->setAccessType('offline');
         $client->setAccessToken($token);
-
         if ($client->isAccessTokenExpired()) {
             $refreshToken = $client->getRefreshToken() ?: ($token['refresh_token'] ?? null);
 

@@ -160,7 +160,7 @@
             gap: 12px;
             flex-wrap: wrap;
         ">
-            <a href="{{ route('test-header') }}"
+            <a href="{{ route('home') }}"
                style="
                     display: inline-flex;
                     align-items: center;

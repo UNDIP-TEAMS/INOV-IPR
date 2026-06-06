@@ -26,7 +26,7 @@
  <body class="admin-page">
     <header class="admin-header">
     <div class="brand">
-        <img src="{{ asset('images/logo.jpg') }}?v={{ filemtime(public_path('images/logo.jpg')) }}" alt="Logo">
+        <img src="{{ Storage::disk('s3')->url('logo.jpg') }}" alt="Logo">
     </div>
 
     <div class="header-actions">
@@ -34,7 +34,7 @@
        <a href="{{ route('admin.dashboard', ['tab'=>'status','sub'=>'revisi']) }}"
           class="notif-icon-btn"
           title="Notif Revisi">
-            <img src="{{ asset('images/notif.png') }}" alt="Notif" class="notif-ic">
+            <img src="{{ Storage::disk('s3')->url('notif.png') }}" alt="Notif" class="notif-ic">
 
             @if(($notifCount ?? 0) > 0)
                 <span class="notif-badge">{{ $notifCount }}</span>
@@ -43,7 +43,7 @@
 
         <div class="user-dd" id="userDD">
             <button type="button" class="user-icon" id="userBtn" aria-haspopup="true" aria-expanded="false">
-                <img src="{{ asset('images/user.png') }}" alt="User">
+                <img src="{{ Storage::disk('s3')->url('user.png') }}" alt="User">
             </button>
 
             <div class="user-menu" id="userMenu" hidden>
@@ -62,7 +62,7 @@
 
 
     <button type="button" class="logout-btn" id="openLogoutModal" aria-label="Logout">
-        <img src="{{ asset('images/logout.png') }}" alt="Logout">
+        <img src="{{ Storage::disk('s3')->url('logout.png') }}" alt="Logout">
     </button>
 
     </div>
@@ -101,19 +101,19 @@
 
         <a class="side-link {{ $tab==='stats' ? 'active' : '' }}"
            href="{{ route('admin.dashboard', ['tab'=>'stats']) }}">
-            <img class="side-ic-img" src="{{ asset('images/statistik.png') }}" alt="">
+            <img class="side-ic-img" src="{{ Storage::disk('s3')->url('statistik.png') }}" alt="">
             Statistik Analisis
         </a>
 
         <a class="side-link {{ $tab==='cipta' ? 'active' : '' }}"
            href="{{ route('admin.dashboard', ['tab'=>'cipta']) }}">
-            <img class="side-ic-img" src="{{ asset('images/dokumen.png') }}" alt="">
+            <img class="side-ic-img" src="{{ Storage::disk('s3')->url('dokumen.png') }}" alt="">
             Data Hak Cipta
         </a>
 
         <a class="side-link {{ $tab==='paten' ? 'active' : '' }}"
            href="{{ route('admin.dashboard', ['tab'=>'paten']) }}">
-            <img class="side-ic-img" src="{{ asset('images/dokumen.png') }}" alt="">
+            <img class="side-ic-img" src="{{ Storage::disk('s3')->url('dokumen.png') }}" alt="">
             Data Paten
         </a>
 
@@ -262,17 +262,17 @@
 
               {{-- ===== EXPORT BUTTONS ===== --}}
               <a class="btn-mini" href="{{ route('admin.cipta.export_excel') }}" title="Download Excel">
-                <img src="{{ asset('images/excel.png') }}" alt="Excel" style="width:32px;height:32px;vertical-align:middle;">
+                <img src="{{ Storage::disk('s3')->url('excel.png') }}" alt="PDF" style="width:32px;height:32px;">
                 Excel
               </a>
 
               <a class="btn-mini" href="{{ route('admin.cipta.export_pdf') }}" title="Download PDF">
-                <img src="{{ asset('images/pdf.png') }}" alt="PDF" style="width:32px;height:32px;">
+                <img src="{{ Storage::disk('s3')->url('pdf.png') }}" alt="PDF" style="width:32px;height:32px;">
                 PDF
               </a>
 
               <a class="btn-mini" href="{{ route('admin.cipta.export_csv') }}" title="Download CSV">
-                <img src="{{ asset('images/csv.png') }}" alt="CSV" style="width:32px;height:32px;">
+                <img src="{{ Storage::disk('s3')->url('csv.png') }}" alt="PDF" style="width:32px;height:32px;">
                 CSV
               </a>
 
@@ -841,7 +841,7 @@
                           <div style="margin-top:8px;font-size:12px;">
                             <b>File Pemohon:</b>
                             @if(!empty($rv->pemohon_file_path))
-                              <a href="{{ asset('storage/'.$rv->pemohon_file_path) }}" target="_blank">
+                              <a href="{{ Storage::disk('s3')->url($rv->pemohon_file_path) }}" target="_blank">
                                 {{ basename($rv->pemohon_file_path) }}
                               </a>
                             @else
@@ -852,7 +852,7 @@
                           <div style="margin-top:6px;font-size:12px;">
                             <b>Lampiran Admin:</b>
                             @if(!empty($rv->file_path))
-                              <a href="{{ asset('storage/'.$rv->file_path) }}" target="_blank">
+                              <a href="{{ Storage::disk('s3')->url($rv->file_path) }}" target="_blank">
                                 {{ basename($rv->file_path) }}
                               </a>
                             @else

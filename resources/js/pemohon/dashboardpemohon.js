@@ -290,3 +290,60 @@ document.addEventListener("change", function (e) {
     }
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".btnPendaftaran").forEach((btn) => {
+
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const url = this.getAttribute("href");
+
+      Swal.fire({
+        title: "Konfirmasi Pendaftaran",
+        text: "Apakah sudah melakukan konfirmasi datang ke Innovation Hub dan menyerahkan tanda terima?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#2563eb",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Sudah",
+        cancelButtonText: "Belum",
+        allowEnterKey: false,
+        focusCancel: true
+      }).then((result) => {
+
+        // kalau klik SUDAH
+        if (result.isConfirmed) {
+
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: "Pendaftaran akan dilanjutkan.",
+            timer: 1500,
+            showConfirmButton: false
+          });
+
+          setTimeout(() => {
+            window.location.href = url;
+          }, 1500);
+
+        }
+
+        // kalau klik BELUM
+        else if (result.dismiss === Swal.DismissReason.cancel) {
+
+          Swal.fire({
+            icon: "warning",
+            title: "Konfirmasi Diperlukan",
+            text: "Mohon lakukan konfirmasi datang ke Innovation Hub dan menyerahkan tanda terima terlebih dahulu.",
+            confirmButtonColor: "#2563eb"
+          });
+
+        }
+
+      });
+
+    });
+
+  });
+});

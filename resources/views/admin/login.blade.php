@@ -11,11 +11,11 @@
 
     <header class="admin-header">
         <div class="brand">
-            <img src="{{ asset('images/logo.jpg') }}" alt="Logo">
+            <img src="{{ Storage::disk('s3')->url('logo.jpg') }}">
         </div>
 
         <a href="#" class="user-icon">
-            <img src="{{ asset('images/user.png') }}" alt="User">
+            <img src="{{ Storage::disk('s3')->url('user.png') }}">
         </a>
     </header>
 

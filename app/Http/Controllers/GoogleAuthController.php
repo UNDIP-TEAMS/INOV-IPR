@@ -11,9 +11,10 @@ class GoogleAuthController extends Controller
     protected function makeClient(): Client
     {
         $client = new Client();
-        $client->setClientId(env('GOOGLE_CLIENT_ID'));
+        $client->setClientId(config('services.google_cipta.client_id'));
+        $client->setClientSecret(config('services.google_cipta.client_secret'));
+        $client->setRedirectUri(config('services.google_cipta.redirect'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));
         $client->setAccessType('offline');
         $client->setPrompt('consent');
         $client->setScopes([
