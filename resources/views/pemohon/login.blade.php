@@ -4,6 +4,12 @@
 
 @vite(['resources/js/pemohon/login.js'])
 
+@php
+use Illuminate\Support\Facades\Storage;
+
+$logoUrl = Storage::disk('s3')->url('dirinov26.png');
+@endphp
+
 @section('content')
 <style>
   .cp-note{
@@ -32,7 +38,7 @@
 
         <div class="login-left">
           <div class="logo-badge">
-            <img src="{{ asset('images/dirinov26.png') }}" alt="Inovasi & Kerja Sama" class="login-logo" />
+            <img src="{{ $logoUrl }}" alt="Inovasi & Kerja Sama" class="login-logo" />
           </div>
         </div>
 
