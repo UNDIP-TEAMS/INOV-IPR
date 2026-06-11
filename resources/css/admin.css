@@ -806,9 +806,11 @@ body{
 .page-head{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:12px;
+  justify-content:flex-start;
+  gap:20px;
   margin: 6px 0 14px;
+  flex-wrap:nowrap;
+  overflow-x:auto;
 }
 
 .page-actions{
@@ -913,10 +915,11 @@ body{
 
 .input{
   width:100%;
-  padding:8px 10px;
+  padding:6px 8px;
   border:1px solid #e6ebf5;
   border-radius:10px;
 }
+
 
 .badge{
   display:inline-block;
@@ -1639,15 +1642,17 @@ body.admin-page .dash-content{
 
 .filters-bar{
   display:flex;
-  align-items:flex-end;
-  gap:12px;
-  padding:10px 12px;
-  border:1px solid #e6ebf5;
-  border-radius:14px;
-  background:#fff;
-  flex-wrap:wrap;
-}
+  align-items:center;
+  gap:6px;
 
+  padding:6px 10px; 
+  border:1px solid #e6ebf5;
+  border-radius:12px;
+  background:#fff;
+
+  width:fit-content; 
+  flex-wrap:nowrap; 
+}
 .filters-label{
   font-weight:800;
   color:#6b7280;
@@ -1656,7 +1661,7 @@ body.admin-page .dash-content{
   padding:0 6px 4px 2px;
 }
 
-.filter-item{ display:flex; flex-direction:column; gap:6px; }
+.filter-item{ display:flex; flex-direction:column; gap:4px; }
 .filter-item label{ font-size:12px; color:#6b7280; }
 
 .date-range-wrap{ position:relative; display:flex; align-items:center; }
@@ -1665,9 +1670,8 @@ body.admin-page .dash-content{
 .date-range-input{
   padding-left:34px;
   padding-right:34px;
-  width: 240px;
-  max-width: 22vw;
-  min-width: 160px;  
+  width: 180px;
+  min-width: 180px;
 }
 
 .date-clear{
@@ -1692,7 +1696,7 @@ body.admin-page .dash-content{
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 22px; 
+  margin-top: 0;
 }
 
 .btn-apply {
@@ -1731,16 +1735,28 @@ body.admin-page .dash-content{
 .page-actions--paten,
 .page-actions--cipta{
   display:flex;
-  align-items:flex-end;
+  align-items:center;
   gap:12px;
-  flex-wrap:nowrap;    
-  min-width:0;      
+  flex-wrap:nowrap;
+  min-width:0;
+  overflow-x:auto;
+  margin-left:0;
+}
+.page-title,
+.filters-bar,
+.btn-mini,
+.search-input--paten,
+.search-input--cipta{
+  flex-shrink:0;
+}
+.page-head{
+  flex-wrap:wrap;
 }
 
 .page-actions--paten .filters-bar,
 .page-actions--cipta .filters-bar{
-  flex: 1 1 auto;    
-  min-width:0;
+  flex: none;
+  width: fit-content;
 }
 
 .search-input--paten,
@@ -1760,7 +1776,12 @@ body.admin-page .dash-content{
 
 .page-title{ margin:0; white-space:nowrap; }
 
-.page-actions--paten{ flex:1; display:flex; justify-content:flex-end; gap:12px; }
+.page-actions--paten{  
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:12px;
+}
 
 /* ===== REVISI HEADER LAYOUT ===== */
 .page-head--revisi{
@@ -1848,8 +1869,9 @@ body.admin-page .dash-content{
 
 .filters-bar--revisi .filter-actions{
   display:flex;
-  gap:10px;
   align-items:center;
+  gap:10px;
+  margin-top:0;
 }
 
 .btn-remove--danger{
@@ -1874,12 +1896,14 @@ body.admin-page .dash-content{
 
 .revisi-head__row2{
   display:flex;
-  align-items:flex-start;
-  gap:14px;
+  align-items:center;
+  gap:8px;
+  margin-top:-30px;
 }
 
 .revisi-head__row2 .filters-bar{
-  flex:1;
+  flex:none;
+  width:fit-content;
 }
 
 .search-input--revisi{
@@ -1895,9 +1919,12 @@ body.admin-page .dash-content{
 }
 
 .filters-bar--revisi{
-  flex: 1;
-  width: auto;
-  min-width: 0;
-  padding: 8px 8x;
+  display:flex;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:6px;
+
+  width:fit-content;
+  padding:2px 6px;
 }
 
