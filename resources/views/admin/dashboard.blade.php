@@ -211,11 +211,15 @@
 
                 {{-- STATUS --}}
                 <div class="filter-item">
-                  <label>Status</label>
                   <select name="status" class="input">
+                    <option value="" disabled {{ request('status') ? '' : 'selected' }}>
+                      Status
+                    </option>
+
                     <option value="">Semua</option>
+
                     @foreach(['terkirim','proses','revisi','approve'] as $st)
-                      <option value="{{ $st }}" {{ request('status')===$st ? 'selected' : '' }}>
+                      <option value="{{ $st }}" {{ request('status') === $st ? 'selected' : '' }}>
                         {{ strtoupper($st) }}
                       </option>
                     @endforeach
@@ -223,11 +227,15 @@
                 </div>
 
                 <div class="filter-item">
-                  <label>Jenis</label>
                   <select name="jenis" class="input">
+                    <option value="" disabled {{ request('jenis') ? '' : 'selected' }}>
+                      Jenis
+                    </option>
+
                     <option value="">Semua</option>
+
                     @foreach(($jenisList ?? []) as $j)
-                      <option value="{{ $j }}" {{ request('jenis')===$j ? 'selected' : '' }}>
+                      <option value="{{ $j }}" {{ request('jenis') === $j ? 'selected' : '' }}>
                         {{ $j }}
                       </option>
                     @endforeach
@@ -236,14 +244,13 @@
 
                 {{-- DATE RANGE --}}
                 <div class="filter-item">
-                  <label>Tanggal</label>
 
                   <div class="date-range-wrap">
                     <span class="date-ic">📅</span>
                     <input type="text"
                       id="dateRangeCipta"
                       class="input date-range-input"
-                      placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                      placeholder="YYYY-MM-DD"
                       value="{{ request('from') && request('to') ? request('from').' - '.request('to') : '' }}"
                       autocomplete="off"
                     >
@@ -403,24 +410,32 @@
 
         {{-- STATUS --}}
         <div class="filter-item">
-          <label>Status</label>
-          <select name="status" class="input">
-            <option value="">Semua</option>
-            @foreach(['terkirim','proses','revisi','approve'] as $st)
-              <option value="{{ $st }}" {{ request('status')===$st ? 'selected' : '' }}>
-                {{ strtoupper($st) }}
-              </option>
-            @endforeach
-          </select>
-        </div>
+        <select name="status" class="input">
+          <option value="" disabled {{ request('status') ? '' : 'selected' }}>
+            Status
+          </option>
+
+          <option value="">Semua</option>
+
+          @foreach(['terkirim','proses','revisi','approve'] as $st)
+            <option value="{{ $st }}" {{ request('status') === $st ? 'selected' : '' }}>
+              {{ strtoupper($st) }}
+            </option>
+          @endforeach
+        </select>
+      </div>
 
         {{-- JENIS --}}
         <div class="filter-item">
-          <label>Jenis</label>
           <select name="jenis" class="input">
+            <option value="" disabled {{ request('jenis') ? '' : 'selected' }}>
+              Jenis
+            </option>
+
             <option value="">Semua</option>
+
             @foreach(($jenisList ?? []) as $j)
-              <option value="{{ $j }}" {{ request('jenis')===$j ? 'selected' : '' }}>
+              <option value="{{ $j }}" {{ request('jenis') === $j ? 'selected' : '' }}>
                 {{ $j }}
               </option>
             @endforeach
@@ -429,14 +444,13 @@
 
         {{-- DATE RANGE --}}
         <div class="filter-item">
-          <label>Tanggal</label>
 
           <div class="date-range-wrap">
             <span class="date-ic">📅</span>
             <input type="text"
               id="dateRangePaten"
               class="input date-range-input"
-              placeholder="YYYY-MM-DD - YYYY-MM-DD"
+              placeholder="YYYY-MM-DD"
               value="{{ request('from') && request('to') ? request('from').' - '.request('to') : '' }}"
               autocomplete="off"
             >
@@ -715,32 +729,44 @@
         <div class="filters-label">FILTERS</div>
 
         <div class="filter-item">
-          <label>Kategori</label>
           <select name="rev_type" class="input">
+            <option value="" disabled {{ request('rev_type') ? '' : 'selected' }}>
+              Jenis
+            </option>
+
             <option value="">Semua</option>
-            <option value="paten" {{ request('rev_type')==='paten' ? 'selected' : '' }}>PATEN</option>
-            <option value="cipta" {{ request('rev_type')==='cipta' ? 'selected' : '' }}>HAK CIPTA</option>
+
+            <option value="paten" {{ request('rev_type') === 'paten' ? 'selected' : '' }}>
+              PATEN
+            </option>
+
+            <option value="cipta" {{ request('rev_type') === 'cipta' ? 'selected' : '' }}>
+              HAK CIPTA
+            </option>
           </select>
         </div>
 
-        <div class="filter-item">
-          <label>Dokumen</label>
-          <select name="rev_doc" class="input">
-            <option value="">Semua</option>
-            @foreach(($revDocKeys ?? []) as $k)
-              <option value="{{ $k }}" {{ request('rev_doc')===$k ? 'selected' : '' }}>
-                {{ $docLabels[$k] ?? $k }}
-              </option>
-            @endforeach
-          </select>
-        </div>
+       <div class="filter-item">
+        <select name="rev_doc" class="input">
+          <option value="" disabled {{ request('rev_doc') ? '' : 'selected' }}>
+            Dokumen
+          </option>
+
+          <option value="">Semua</option>
+
+          @foreach(($revDocKeys ?? []) as $k)
+            <option value="{{ $k }}" {{ request('rev_doc') === $k ? 'selected' : '' }}>
+              {{ $docLabels[$k] ?? $k }}
+            </option>
+          @endforeach
+        </select>
+      </div>
 
         <div class="filter-item">
-          <label>Tanggal</label>
           <div class="date-range-wrap">
             <span class="date-ic">📅</span>
             <input type="text" id="dateRangeRevisi" class="input date-range-input"
-                   placeholder="YYYY-MM-DD - YYYY-MM-DD"
+                   placeholder="YYYY-MM-DD"
                    value="{{ request('from') && request('to') ? request('from').' - '.request('to') : '' }}"
                    autocomplete="off">
             <button type="button" class="date-clear" id="clearDateRangeRevisi" title="Clear">×</button>
