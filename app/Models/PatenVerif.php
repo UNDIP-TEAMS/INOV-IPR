@@ -45,6 +45,13 @@ class PatenVerif extends Model
         // verifikasi
         'status_verif',
         'catatan_verif',
+        'draft_paten_drive_url',
+        
+        'form_permohonan_drive_url',
+        'surat_kepemilikan_drive_url',
+        'surat_pengalihan_drive_url',
+        'scan_ktp_drive_url',
+        'gambar_prototipe_drive_url',
     ];
 
     protected $casts = [
