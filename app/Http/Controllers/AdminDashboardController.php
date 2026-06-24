@@ -233,7 +233,6 @@ class AdminDashboardController extends Controller
                 ->select([
                     'p.*',
                     DB::raw("COALESCE(sv.status,'terkirim') as status"),
-                    'sv.sertifikat_path',
                     'sv.emailed_at',
                 ]);
 
@@ -312,7 +311,6 @@ class AdminDashboardController extends Controller
                 ->select([
                 'c.*',
                 DB::raw("COALESCE(sv.status,'terkirim') as status"),
-                'sv.sertifikat_path',
                 'sv.emailed_at',
                 ]);
 
@@ -362,7 +360,6 @@ class AdminDashboardController extends Controller
 
                 DB::raw("'paten' as type"),
                 DB::raw("COALESCE(sv.status,'terkirim') as status"),
-                'sv.sertifikat_path',
                 'sv.emailed_at',
             ])
             ->orderByDesc('p.id')
@@ -391,7 +388,6 @@ class AdminDashboardController extends Controller
 
                 DB::raw("'cipta' as type"),
                 DB::raw("COALESCE(sv.status,'terkirim') as status"),
-                'sv.sertifikat_path',
                 'sv.emailed_at',
             ])
             ->orderByDesc('hak_cipta_verifs.id')
@@ -936,7 +932,6 @@ class AdminDashboardController extends Controller
                         ->where(['ref_type'=>$type,'ref_id'=>$id])
                         ->update([
                             'tanda_terima_pdf' => $pdfPath,
-                            'tanda_terima_generated_at' => now(),
                         ]);
                 }
             }
@@ -979,7 +974,6 @@ class AdminDashboardController extends Controller
             DB::table('status_verifikasi')->updateOrInsert(
                 ['ref_type' => $type, 'ref_id' => $id],
                 [
-                    'sertifikat_path' => $path,
                     'updated_at' => now(),
                     'created_at' => $old ? $old->created_at : now(),
                 ]
@@ -1033,49 +1027,49 @@ class AdminDashboardController extends Controller
             }
         }
 
-        // ========= resend email sertifikat =========
-        public function resendEmail(Request $request, string $type, int $id)
-        {
-            if (!$request->session()->get('admin_logged_in')) {
-                return redirect()->route('admin.login.form');
-            }
-            if (!in_array($type, ['paten', 'cipta'])) abort(404);
+        // // ========= resend email sertifikat =========
+        // public function resendEmail(Request $request, string $type, int $id)
+        // {
+        //     if (!$request->session()->get('admin_logged_in')) {
+        //         return redirect()->route('admin.login.form');
+        //     }
+        //     if (!in_array($type, ['paten', 'cipta'])) abort(404);
 
-            $sv = DB::table('status_verifikasi')->where(['ref_type' => $type, 'ref_id' => $id])->first();
-            if (!$sv || empty($sv->sertifikat_path)) {
-                return redirect()->route('admin.dashboard', ['tab'=>'status'])
-                    ->with('success', 'Tidak bisa kirim ulang: sertifikat belum ada.');
-            }
+        //     $sv = DB::table('status_verifikasi')->where(['ref_type' => $type, 'ref_id' => $id])->first();
+        //     if (!$sv || empty($sv->sertifikat_path)) {
+        //         return redirect()->route('admin.dashboard', ['tab'=>'status'])
+        //             ->with('success', 'Tidak bisa kirim ulang: sertifikat belum ada.');
+        //     }
 
-            $meta = $this->getRowByType($type, $id);
-            $row = $meta['row'];
-            $kategori = $meta['kategori'];
-            $judul = $meta['judul'];
+        //     $meta = $this->getRowByType($type, $id);
+        //     $row = $meta['row'];
+        //     $kategori = $meta['kategori'];
+        //     $judul = $meta['judul'];
 
-            $emails = $this->parseEmails($meta['email']);
-            if (count($emails) === 0) {
-                return redirect()->route('admin.dashboard', ['tab'=>'status'])
-                    ->with('success', 'Email pemohon kosong/tidak valid.');
-            }
+        //     $emails = $this->parseEmails($meta['email']);
+        //     if (count($emails) === 0) {
+        //         return redirect()->route('admin.dashboard', ['tab'=>'status'])
+        //             ->with('success', 'Email pemohon kosong/tidak valid.');
+        //     }
 
-            $fullPath = storage_path('app/public/' . $sv->sertifikat_path);
+        //     $fullPath = storage_path('app/public/' . $sv->sertifikat_path);
 
-            try {
-                foreach ($emails as $to) {
-                    Mail::to($to)->send(new DiterimaMail($kategori, $judul, $row->no_pendaftaran ?? '-', $fullPath, basename($sv->sertifikat_path)));
-                }
+        //     try {
+        //         foreach ($emails as $to) {
+        //             Mail::to($to)->send(new DiterimaMail($kategori, $judul, $row->no_pendaftaran ?? '-', $fullPath, basename($sv->sertifikat_path)));
+        //         }
 
-                DB::table('status_verifikasi')->where(['ref_type'=>$type,'ref_id'=>$id])
-                    ->update(['emailed_at'=>Carbon::now(),'updated_at'=>now()]);
+        //         DB::table('status_verifikasi')->where(['ref_type'=>$type,'ref_id'=>$id])
+        //             ->update(['emailed_at'=>Carbon::now(),'updated_at'=>now()]);
 
-                return redirect()->route('admin.dashboard', ['tab'=>'status'])
-                    ->with('success', 'Email berhasil dikirim ulang.');
-            } catch (\Throwable $e) {
-                Log::error('Gagal resend email', ['err' => $e->getMessage()]);
-                return redirect()->route('admin.dashboard', ['tab'=>'status'])
-                    ->with('success', 'Gagal kirim ulang email. Cek storage/logs/laravel.log');
-            }
-        }
+        //         return redirect()->route('admin.dashboard', ['tab'=>'status'])
+        //             ->with('success', 'Email berhasil dikirim ulang.');
+        //     } catch (\Throwable $e) {
+        //         Log::error('Gagal resend email', ['err' => $e->getMessage()]);
+        //         return redirect()->route('admin.dashboard', ['tab'=>'status'])
+        //             ->with('success', 'Gagal kirim ulang email. Cek storage/logs/laravel.log');
+        //     }
+        // }
 
         // ========= verifikasi dokumen per-file (OK / REVISI) =========
         public function setVerifikasiDokumen(Request $request, string $type, int $id)

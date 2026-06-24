@@ -195,7 +195,7 @@ public function sendCredentialAfterSubmit(string $kode): array
             return redirect()->route('pemohon.dashboard');
         }
         return back()->withErrors([
-            'password' => 'Password salah'
+            'password' => 'Password atau username salah'
         ])->withInput();
     }
 
