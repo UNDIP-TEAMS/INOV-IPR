@@ -1744,13 +1744,17 @@ class AdminDashboardController extends Controller
     {
         $meta = $this->getRowByType($type, $id);
 
-       $template = $type === 'paten'
-    ? storage_path('app/templates/tanda_terima_paten.docx')
-    : storage_path('app/templates/tanda_terima_hakcipta.docx');
+            $templateFile = $type === 'paten'
+            ? 'tanda_terima_paten.docx'
+            : 'tanda_terima_hakcipta.docx';
 
-    if (!file_exists($template)) {
-        throw new \Exception("Template tanda terima tidak ditemukan: {$template}");
-    }
+        $template = storage_path('app/tmp/' . $templateFile);
+
+        file_put_contents(
+            $template,
+            Storage::disk('s3')->get($templateFile)
+        );
+
 
         $doc = new TemplateProcessor($template);
         $judul = trim((string)($meta['judul'] ?? '-')) ?: '-';
