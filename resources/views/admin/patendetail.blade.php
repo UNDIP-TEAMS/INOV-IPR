@@ -17,12 +17,7 @@
   <title>Detail Paten</title>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  @vite(['resources/css/admin.css', 'resources/js/app.js'])
-
-  @vite([
-    'resources/css/lihatdetail.css',
-    'resources/js/admin/lihatdetail.js'
-  ])
+  @vite(['resources/js/app.js'])
 
   <style>
     .doc-dot{
