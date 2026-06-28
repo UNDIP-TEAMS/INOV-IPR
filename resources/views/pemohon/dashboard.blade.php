@@ -2,12 +2,6 @@
 
 @section('title', 'Dashboard Pemohon')
 
-@vite([
-  'resources/css/dashboardpemohon.css',
-  'resources/js/app.js',
-  
-])
-
 @php
 use Illuminate\Support\Facades\Storage;
 @endphp

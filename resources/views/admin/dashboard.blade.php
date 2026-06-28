@@ -12,8 +12,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard Admin</title>
 
-    {{-- CSS + JS lewat Vite --}}
-    @vite(['resources/css/admin.css', 'resources/js/app.js', 'resources/js/admin/dashboard.js'])
+    @vite(['resources/js/app.js'])
 
     {{-- daterangepicker --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
