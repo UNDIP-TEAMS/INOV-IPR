@@ -542,8 +542,8 @@
         <button
           type="button"
           class="btn-prev"
-          data-fallback="{{ route('hakpaten.draftpatenisiformulir') }}"
-          onclick="(history.length > 1) ? history.back() : (window.location.href=this.dataset.fallback)"
+          data-url="{{ route('hakpaten.draftpatenisiformulir') }}"
+          onclick="window.location.href=this.dataset.url"
         >
           &laquo; Sebelumnya
         </button>

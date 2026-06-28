@@ -94,8 +94,8 @@ class DuplicateSkemaController extends Controller
             return response()->download($out, 'Surat Pernyataan TKT 7-9.docx')->deleteFileAfterSend(true);
         }
 
-        $soffice = 'C:\Program Files\LibreOffice\program\soffice.exe';
-        if (!file_exists($soffice)) $soffice = 'C:\Program Files\LibreOffice\program\soffice.exe';
+        $soffice = 'D:\Program Files\LibreOffice\program\soffice.exe';
+        if (!file_exists($soffice)) $soffice = 'D:\Program Files\LibreOffice\program\soffice.exe';
         
         $outDir = dirname($out);
         $pdfPath = preg_replace('/\.docx$/i', '.pdf', $out);

@@ -21,7 +21,7 @@
       </div>
 
       <div class="submit-actions">
-        <a href="{{ url('/header') }}" class="btn-primary">Kembali ke Beranda</a>
+        <a href="{{ route('home') }}" class="btn-primary">Kembali ke Beranda</a>
         <a href="{{ route('pemohon.claim', $verif->no_pendaftaran) }}" class="btn-secondary">
             Login
         </a>
