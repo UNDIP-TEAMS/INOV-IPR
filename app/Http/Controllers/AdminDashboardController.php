@@ -1744,11 +1744,17 @@ class AdminDashboardController extends Controller
     {
         $meta = $this->getRowByType($type, $id);
 
-            $templateFile = $type === 'paten'
+        $templateFile = $type === 'paten'
             ? 'tanda_terima_paten.docx'
             : 'tanda_terima_hakcipta.docx';
 
-        $template = storage_path('app/tmp/' . $templateFile);
+        $tmpDir = storage_path('app/tmp');
+
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
+
+        $template = $tmpDir . DIRECTORY_SEPARATOR . $templateFile;
 
         file_put_contents(
             $template,
@@ -1775,10 +1781,15 @@ class AdminDashboardController extends Controller
         $doc->saveAs($tmpDocx);
 
         // LibreOffice path
-        $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';;
+        if (PHP_OS_FAMILY === 'Windows') {
+            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+        } else {
+            $soffice = '/usr/bin/soffice';
+        }
+
         if (!file_exists($soffice)) {
             @unlink($tmpDocx);
-            throw new \Exception("LibreOffice (soffice.exe) tidak ditemukan: {$soffice}");
+            throw new \Exception("LibreOffice tidak ditemukan: {$soffice}");
         }
 
         $convertOut = storage_path('app/lo_out');
