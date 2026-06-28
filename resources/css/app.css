@@ -30,6 +30,7 @@
 @import './login.css';
 @import "./patenverif.css";
 @import "./dashboardpemohon.css";
+@import "./admin.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
