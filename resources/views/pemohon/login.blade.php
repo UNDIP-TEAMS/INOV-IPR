@@ -2,15 +2,9 @@
 
 @section('title', 'Login Pemohon')
 
-@vite(['resources/js/pemohon/login.js'])
-
-@php
-use Illuminate\Support\Facades\Storage;
-
-$logoUrl = Storage::disk('s3')->url('dirinov26.png');
-@endphp
 
 @section('content')
+
 <style>
   .cp-note{
     background:#fff3cd;
@@ -38,7 +32,9 @@ $logoUrl = Storage::disk('s3')->url('dirinov26.png');
 
         <div class="login-left">
           <div class="logo-badge">
-            <img src="{{ $logoUrl }}" alt="Inovasi & Kerja Sama" class="login-logo" />
+            <img src="{{ Storage::disk('s3')->url('dirinov26.png') }}"
+                class="login-logo"
+                alt="Inovasi & Kerja Sama">
           </div>
         </div>
 

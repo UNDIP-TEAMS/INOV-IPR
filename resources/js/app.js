@@ -10,6 +10,7 @@ import './alert';
 import './hakpaten/isiform';
 import './hakpaten/datadiri';
 import './pemohon/dashboardpemohon';
+import './pemohon/login';
 import './uploadpaten';
 import '../css/admin.css';
 import './hakcipta/formpendaftaran'
