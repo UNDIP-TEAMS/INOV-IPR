@@ -18,56 +18,41 @@ class FormPendaftaranCiptaanController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-    'jumlah_inventor'        => ['required', 'integer', 'min:1', 'max:20'],
-    'jenis_cipta'            => ['required', 'in:Buku,Program Komputer,Karya Rekaman Video,Lainnya'],
-    'jenis_cipta_lainnya'    => ['nullable', 'string', 'max:255'],
-    'judul_ciptaan'          => ['required', 'string', 'max:255'],
-    'link_ciptaan'           => ['nullable', 'url'],
-    'berupa'                 => ['nulabel', 'string', 'max:255'],
-    'tanggal_pengisian'      => ['required', 'date'],
-    'tempat'                 => ['required', 'string', 'max:100'],
-    'uraian'                 => ['required', 'string', 'max:350'],
-
-    'tempatpertama' => ['required', 'string', 'max:100'],
-    'tanggal_pertama' => ['required', 'date'],
-
-    'inventor'               => ['required', 'array'],
-
-    'inventor.nama'          => ['required', 'array'],
-    'inventor.nama.*'        => ['required', 'string', 'max:200'],
-
-    'inventor.nik'           => ['required', 'array'],
-    'inventor.nik.*'         => ['required', 'string', 'max:50'],
-
-    'inventor.nip_nim'       => ['required', 'array'],
-    'inventor.nip_nim.*'     => ['required', 'string', 'max:50'],
-
-    'inventor.fakultas'      => ['required', 'array'],
-    'inventor.fakultas.*'    => ['required', 'string', 'max:255'],
-
-    'inventor.nidn'          => ['nullable', 'array'],
-    'inventor.nidn.*'        => ['nullable', 'string', 'max:20'],
-
-    'inventor.status'        => ['required', 'array'],
-    'inventor.status.*'      => ['required', 'string', 'max:50'],
-
-    'inventor.no_hp'         => ['required', 'array'],
-    'inventor.no_hp.*'       => ['required', 'string', 'max:50'],
-
-    'inventor.tlp_rumah'     => ['nullable', 'array'],
-    'inventor.tlp_rumah.*'   => ['nullable', 'string', 'max:50'],
-
-    'inventor.email'         => ['required', 'array'],
-    'inventor.email.*'       => ['required', 'email', 'max:100'],
-
-    'inventor.alamat'        => ['required', 'array'],
-    'inventor.alamat.*'      => ['required', 'string'],
-
-    'inventor.kode_pos'      => ['required', 'array'],
-    'inventor.kode_pos.*'    => ['required', 'string', 'max:20'],
-
-        'download_format'        => ['nullable', 'in:pdf,docx'],
-    ]);
+            'jumlah_inventor'        => ['required', 'integer', 'min:1', 'max:20'],
+            'jenis_cipta'            => ['required', 'in:Buku,Program Komputer,Karya Rekaman Video,Lainnya'],
+            'jenis_cipta_lainnya'    => ['nullable', 'string', 'max:255'],
+            'judul_ciptaan'          => ['required', 'string', 'max:255'],
+            'link_ciptaan'           => ['nullable', 'url'],
+            'tanggal_pengisian'      => ['required', 'date'],
+            'tempat'                 => ['required', 'string', 'max:100'],
+            'uraian'                 => ['required', 'string', 'max:350'],
+            'tempatpertama'          => ['required', 'string', 'max:100'],
+            'tanggal_pertama'        => ['required', 'date'],
+            'inventor'               => ['required', 'array'],
+            'inventor.nama'          => ['required', 'array'],
+            'inventor.nama.*'        => ['required', 'string', 'max:200'],
+            'inventor.nik'           => ['required', 'array'],
+            'inventor.nik.*'         => ['required', 'string', 'max:50'],
+            'inventor.nip_nim'       => ['required', 'array'],
+            'inventor.nip_nim.*'     => ['required', 'string', 'max:50'],
+            'inventor.fakultas'      => ['required', 'array'],
+            'inventor.fakultas.*'    => ['required', 'string', 'max:255'],
+            'inventor.nidn'          => ['nullable', 'array'],
+            'inventor.nidn.*'        => ['nullable', 'string', 'max:20'],
+            'inventor.status'        => ['required', 'array'],
+            'inventor.status.*'      => ['required', 'string', 'max:50'],
+            'inventor.no_hp'         => ['required', 'array'],
+            'inventor.no_hp.*'       => ['required', 'string', 'max:50'],
+            'inventor.tlp_rumah'     => ['nullable', 'array'],
+            'inventor.tlp_rumah.*'   => ['nullable', 'string', 'max:50'],
+            'inventor.email'         => ['required', 'array'],
+            'inventor.email.*'       => ['required', 'email', 'max:100'],
+            'inventor.alamat'        => ['required', 'array'],
+            'inventor.alamat.*'      => ['required', 'string'],
+            'inventor.kode_pos'      => ['required', 'array'],
+            'inventor.kode_pos.*'    => ['required', 'string', 'max:20'],
+            'download_format'        => ['nullable', 'in:pdf,docx'],
+        ]);
 
         $jumlah = (int) $data['jumlah_inventor'];
         $actual = count($data['inventor']['nama'] ?? []);
@@ -76,19 +61,18 @@ class FormPendaftaranCiptaanController extends Controller
         }
 
         $existingForm = session('hakcipta.form', []);
-
         session()->put('hakcipta.form', array_merge($existingForm, [
-            'jumlah_inventor'      => $request->jumlah_inventor,
-            'jenis_cipta'          => $request->jenis_cipta,
-            'jenis_cipta_lainnya'  => $request->jenis_cipta_lainnya,
-            'link_ciptaan'         => $request->link_ciptaan ?? ($existingForm['link_ciptaan'] ?? null),
-            'judul_ciptaan'        => $request->judul_ciptaan,
-            'tempatpertama'        => $request->tempatpertama ?? ($existingForm['tempatpertama'] ?? null),
-            'tanggal_pertama'      => $request->tanggal_pertama ?? ($existingForm['tanggal_pertama'] ?? null),
-            'tanggal_pengisian'    => $request->tanggal_pengisian ?? ($existingForm['tanggal_pengisian'] ?? null),
-            'tempat'               => $request->tempat ?? ($existingForm['tempat'] ?? null),
-            'uraian'               => $request->uraian ?? ($existingForm['uraian'] ?? null),
-            'inventor'             => $request->inventor,
+            'jumlah_inventor'     => $request->jumlah_inventor,
+            'jenis_cipta'         => $request->jenis_cipta,
+            'jenis_cipta_lainnya' => $request->jenis_cipta_lainnya,
+            'link_ciptaan'        => $request->link_ciptaan ?? ($existingForm['link_ciptaan'] ?? null),
+            'judul_ciptaan'       => $request->judul_ciptaan,
+            'tempatpertama'       => $request->tempatpertama ?? ($existingForm['tempatpertama'] ?? null),
+            'tanggal_pertama'     => $request->tanggal_pertama ?? ($existingForm['tanggal_pertama'] ?? null),
+            'tanggal_pengisian'   => $request->tanggal_pengisian ?? ($existingForm['tanggal_pengisian'] ?? null),
+            'tempat'              => $request->tempat ?? ($existingForm['tempat'] ?? null),
+            'uraian'              => $request->uraian ?? ($existingForm['uraian'] ?? null),
+            'inventor'            => $request->inventor,
         ]));
 
         if ($request->input('action') === 'next') {
@@ -102,79 +86,110 @@ class FormPendaftaranCiptaanController extends Controller
         }
 
         $templatePath = tempnam(sys_get_temp_dir(), 'template_permohonan_cipta_') . '.docx';
-
-        file_put_contents(
-            $templatePath,
-            Storage::disk('s3')->get($templateObjectPath)
-        );
+        file_put_contents($templatePath, Storage::disk('s3')->get($templateObjectPath));
 
         $tp = new TemplateProcessor($templatePath);
 
         $tp->setValue('judul_ciptaan', $this->val($data['judul_ciptaan']));
         $tp->setValue('link_ciptaan', $this->val($data['link_ciptaan']));
 
-       // tanggal + tempat pengisian
-        $tgl = Carbon::parse($data['tanggal_pertama'])
-            ->locale('id')
-            ->translatedFormat('d F Y');
-
+        $tgl = Carbon::parse($data['tanggal_pertama'])->locale('id')->translatedFormat('d F Y');
         $tp->setValue('tempatpertama', $this->val($data['tempatpertama']));
         $tp->setValue('tanggal_pertama', $tgl);
 
-        // === inventor rows
-        $names = array_map(
-            fn($n) => $this->val($n),
-            $data['inventor']['nama'] ?? []
-        );
-        $names = array_values(array_filter($names, fn($n) => $n !== ''));
-        $namaGabung = implode(', ', $names);
-
-        $alamat1 = $this->val($data['inventor']['alamat'][0] ?? '');
-        $telp1   = $this->val($data['inventor']['tlp_rumah'][0] ?? ''); // sesuai input: tlp_rumah
-        $hp1     = $this->val($data['inventor']['no_hp'][0] ?? '');
-        $email1  = $this->val($data['inventor']['email'][0] ?? '');
-
-        $tp->setValue('nama_lengkap', $namaGabung);
-        $tp->setValue('alamat', $alamat1);
-        $tp->setValue('tlp_rumah', $telp1);
-        $tp->setValue('no_hp', $hp1);
-        $tp->setValue('email', $email1);
-
-        $tp->setValue('uraian', $this->val($request->input('uraian')));
+        $names = array_values(array_filter(
+            array_map(fn($n) => $this->val($n), $data['inventor']['nama'] ?? []),
+            fn($n) => $n !== ''
+        ));
+        $tp->setValue('nama_lengkap', implode(', ', $names));
+        $tp->setValue('alamat',    $this->val($data['inventor']['alamat'][0] ?? ''));
+        $tp->setValue('tlp_rumah', $this->val($data['inventor']['tlp_rumah'][0] ?? ''));
+        $tp->setValue('no_hp',     $this->val($data['inventor']['no_hp'][0] ?? ''));
+        $tp->setValue('email',     $this->val($data['inventor']['email'][0] ?? ''));
+        $tp->setValue('uraian',    $this->val($request->input('uraian')));
 
         $out = tempnam(sys_get_temp_dir(), 'cipta_') . '.docx';
         $tp->saveAs($out);
+        @unlink($templatePath);
 
-        $format = $data['download_format'];
-
-        if ($format === 'docx') {
-        return response()
-                    ->download($out, 'Permohonan Pendaftaran Ciptaan.docx')
-                    ->deleteFileAfterSend(true);
+        if (($data['download_format'] ?? 'pdf') === 'docx') {
+            return response()
+                ->download($out, 'Permohonan Pendaftaran Ciptaan.docx')
+                ->deleteFileAfterSend(true);
         }
 
-        // === Convert DOCX 
-        $soffice = 'D:\Program Files\LibreOffice\program\soffice.exe';
+        // === Convert ke PDF ===
+        if (PHP_OS_FAMILY === 'Windows') {
+            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            if (!file_exists($soffice)) {
+                $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
+            }
+            if (!file_exists($soffice)) {
+                $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            }
+        } else {
+            $soffice = '/usr/bin/soffice';
+        }
+
         if (!file_exists($soffice)) {
-            $soffice = 'D:\Program Files (x86)\LibreOffice\program\soffice.exe';
-        }
-        if (!file_exists($soffice)) {
-            abort(500, 'soffice.exe tidak ditemukan. Cek instalasi LibreOffice.');
+            abort(500, "LibreOffice tidak ditemukan: {$soffice}");
         }
 
-        $outDir  = dirname($out);
-        $pdfPath = preg_replace('/\.docx$/i', '.pdf', $out);
+        $outDir    = dirname($out);
+        $pdfPath   = preg_replace('/\.docx$/i', '.pdf', $out);
+        $loProfile = sys_get_temp_dir() . '/lo_profile_cipta_' . uniqid();
 
-        // command 
-        $cmd = '"' . $soffice . '" --headless --nologo --nofirststartwizard '
-            . '--convert-to pdf --outdir "' . $outDir . '" "' . $out . '" 2>&1';
+        if (!is_dir($loProfile)) {
+            mkdir($loProfile, 0777, true);
+        }
 
-        $output = [];
-        $code = 0;
-        exec($cmd, $output, $code);
+        $profileArg = '-env:UserInstallation=file:///' . str_replace('\\', '/', $loProfile);
 
-        if ($code !== 0 || !file_exists($pdfPath)) {
-            abort(500, "Gagal convert PDF. ExitCode=$code\n" . implode("\n", $output));
+        $process = new \Symfony\Component\Process\Process([
+            $soffice,
+            '--headless',
+            '--nologo',
+            '--nofirststartwizard',
+            '--nodefault',
+            '--norestore',
+            $profileArg,
+            '--convert-to', 'pdf:writer_pdf_Export',
+            '--outdir', str_replace('\\', '/', $outDir),
+            str_replace('\\', '/', $out),
+        ]);
+
+        $process->setEnv([
+            'USERPROFILE' => $loProfile,
+            'APPDATA'     => $loProfile,
+            'TEMP'        => $loProfile,
+            'TMP'         => $loProfile,
+        ]);
+
+        $process->setTimeout(120);
+        $process->run();
+
+        clearstatcache();
+
+        if (!file_exists($pdfPath)) {
+            $pdfs = glob($outDir . DIRECTORY_SEPARATOR . '*.pdf');
+            if ($pdfs) {
+                usort($pdfs, fn($a, $b) => filemtime($b) <=> filemtime($a));
+                $pdfPath = $pdfs[0];
+            }
+        }
+
+        @array_map('unlink', glob($loProfile . '/*'));
+        @rmdir($loProfile);
+        @unlink($out);
+
+        if (!$pdfPath || !file_exists($pdfPath)) {
+            abort(
+                500,
+                "Gagal convert PDF.\n" .
+                "ExitCode: " . $process->getExitCode() . "\n" .
+                "ErrorOutput: " . $process->getErrorOutput() . "\n" .
+                "Output: " . $process->getOutput()
+            );
         }
 
         return response()

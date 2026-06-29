@@ -267,27 +267,78 @@ class IsiformController extends Controller
         }
 
         // === Convert DOCX -> PDF
-        $soffice = 'D:\Program Files\LibreOffice\program\soffice.exe';
-        if (!file_exists($soffice)) {
-            $soffice = 'D:\Program Files (x86)\LibreOffice\program\soffice.exe';
+       // === Convert ke PDF ===
+        if (PHP_OS_FAMILY === 'Windows') {
+            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            if (!file_exists($soffice)) {
+                $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
+            }
+            if (!file_exists($soffice)) {
+                $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            }
+        } else {
+            $soffice = '/usr/bin/soffice';
         }
+
         if (!file_exists($soffice)) {
-            abort(500, 'soffice.exe tidak ditemukan. Cek instalasi LibreOffice.');
+            abort(500, "LibreOffice tidak ditemukan: {$soffice}");
         }
 
-        $outDir  = dirname($out);
-        $pdfPath = preg_replace('/\.docx$/i', '.pdf', $out);
+        $outDir    = dirname($out);
+        $pdfPath   = preg_replace('/\.docx$/i', '.pdf', $out);
+        $loProfile = sys_get_temp_dir() . '/lo_profile_invensi_' . uniqid();
 
-        // command 
-        $cmd = '"' . $soffice . '" --headless --nologo --nofirststartwizard '
-            . '--convert-to pdf --outdir "' . $outDir . '" "' . $out . '" 2>&1';
+        if (!is_dir($loProfile)) {
+            mkdir($loProfile, 0777, true);
+        }
 
-        $output = [];
-        $code = 0;
-        exec($cmd, $output, $code);
+        $profileArg = '-env:UserInstallation=file:///' . str_replace('\\', '/', $loProfile);
 
-        if ($code !== 0 || !file_exists($pdfPath)) {
-            abort(500, "Gagal convert PDF. ExitCode=$code\n" . implode("\n", $output));
+        $process = new \Symfony\Component\Process\Process([
+            $soffice,
+            '--headless',
+            '--nologo',
+            '--nofirststartwizard',
+            '--nodefault',
+            '--norestore',
+            $profileArg,
+            '--convert-to', 'pdf:writer_pdf_Export',
+            '--outdir', str_replace('\\', '/', $outDir),
+            str_replace('\\', '/', $out),
+        ]);
+
+        $process->setEnv([
+            'USERPROFILE' => $loProfile,
+            'APPDATA'     => $loProfile,
+            'TEMP'        => $loProfile,
+            'TMP'         => $loProfile,
+        ]);
+
+        $process->setTimeout(120);
+        $process->run();
+
+        clearstatcache();
+
+        if (!file_exists($pdfPath)) {
+            $pdfs = glob($outDir . DIRECTORY_SEPARATOR . '*.pdf');
+            if ($pdfs) {
+                usort($pdfs, fn($a, $b) => filemtime($b) <=> filemtime($a));
+                $pdfPath = $pdfs[0];
+            }
+        }
+
+        @array_map('unlink', glob($loProfile . '/*'));
+        @rmdir($loProfile);
+        @unlink($out);
+
+        if (!$pdfPath || !file_exists($pdfPath)) {
+            abort(
+                500,
+                "Gagal convert PDF.\n" .
+                "ExitCode: " . $process->getExitCode() . "\n" .
+                "ErrorOutput: " . $process->getErrorOutput() . "\n" .
+                "Output: " . $process->getOutput()
+            );
         }
 
         return response()

@@ -24,11 +24,7 @@ class PengalihanHakCiptaController extends Controller
         }
 
         $templatePath = tempnam(sys_get_temp_dir(), 'template_pengalihan_cipta_') . '.docx';
-
-        file_put_contents(
-            $templatePath,
-            Storage::disk('s3')->get($templateObjectPath)
-        );
+        file_put_contents($templatePath, Storage::disk('s3')->get($templateObjectPath));
 
         return $templatePath;
     }
@@ -40,29 +36,26 @@ class PengalihanHakCiptaController extends Controller
 
     public function store(Request $request)
     {
-
         $data = $request->validate([
-            'jumlah_inventor' => ['required', 'integer', 'min:1', 'max:14'],
-            'judul_ciptaan' => ['required', 'string', 'max:255'],
-            'tanggal_pengisian' => ['required', 'date'],
-            'jenis_cipta' => ['required', 'string', 'max:100'],
+            'jumlah_inventor'     => ['required', 'integer', 'min:1', 'max:14'],
+            'judul_ciptaan'       => ['required', 'string', 'max:255'],
+            'tanggal_pengisian'   => ['required', 'date'],
+            'jenis_cipta'         => ['required', 'string', 'max:100'],
             'jenis_cipta_lainnya' => ['nullable', 'string', 'max:100'],
-
-            'inventor' => ['required', 'array'],
-            'inventor.nama' => ['required', 'array'],
-            'inventor.nama.*' => ['required', 'string', 'max:200'],
-            'inventor.nik' => ['nullable', 'array'],
-            'inventor.nik.*' => ['nullable', 'string', 'max:100'],
-            'inventor.alamat' => ['required', 'array'],
-            'inventor.alamat.*' => ['required', 'string'],
-            'inventor.kode_pos' => ['nullable', 'array'],
+            'inventor'            => ['required', 'array'],
+            'inventor.nama'       => ['required', 'array'],
+            'inventor.nama.*'     => ['required', 'string', 'max:200'],
+            'inventor.nik'        => ['nullable', 'array'],
+            'inventor.nik.*'      => ['nullable', 'string', 'max:100'],
+            'inventor.alamat'     => ['required', 'array'],
+            'inventor.alamat.*'   => ['required', 'string'],
+            'inventor.kode_pos'   => ['nullable', 'array'],
             'inventor.kode_pos.*' => ['nullable', 'string', 'max:20'],
-            'inventor.email' => ['required', 'array'],
-            'inventor.email.*' => ['required', 'email', 'max:255'],
-            'inventor.no_hp' => ['required', 'array'],
-            'inventor.no_hp.*' => ['required', 'string', 'max:30'],
-
-            'download_format' => ['required', 'in:pdf,docx'],
+            'inventor.email'      => ['required', 'array'],
+            'inventor.email.*'    => ['required', 'email', 'max:255'],
+            'inventor.no_hp'      => ['required', 'array'],
+            'inventor.no_hp.*'    => ['required', 'string', 'max:30'],
+            'download_format'     => ['required', 'in:pdf,docx'],
         ]);
 
         $jumlah = (int) $data['jumlah_inventor'];
@@ -71,89 +64,120 @@ class PengalihanHakCiptaController extends Controller
         }
 
         $templatePath = $this->pickTemplate($jumlah);
-        if (!file_exists($templatePath)) {
-            abort(500, 'Template DOCX tidak ditemukan: ' . $templatePath);
-        }
 
         $tp = new TemplateProcessor($templatePath);
 
-
-        // Set field utama
         $tp->setValue('judul_hak_cipta', $this->val($data['judul_ciptaan']));
 
         $jenis = $data['jenis_cipta'] === 'Lainnya'
             ? $this->val($data['jenis_cipta_lainnya'] ?? 'Lainnya')
             : $this->val($data['jenis_cipta']);
-
         $tp->setValue('jenis', $jenis);
 
         $tgl = Carbon::parse($data['tanggal_pengisian'])->locale('id');
         $tp->setValue('tanggal_pengisian', $tgl->translatedFormat('d F Y'));
 
-        // =========================
-        // Clone table inventor_block
-        // =========================
-
-    $tp->cloneBlock('inventor_block', $jumlah, true, true);
-
-
+        $tp->cloneBlock('inventor_block', $jumlah, true, true);
         for ($i = 1; $i <= $jumlah; $i++) {
             $idx = $i - 1;
-            $tp->setValue("no#{$i}", (string)$i);
-            $tp->setValue("NIK#{$i}", $this->val($data['inventor']['nik'][$idx] ?? ''));
-            $tp->setValue("nama#{$i}", $this->val($data['inventor']['nama'][$idx] ?? ''));
-            $tp->setValue("alamat#{$i}", $this->val($data['inventor']['alamat'][$idx] ?? ''));
+            $tp->setValue("no#{$i}",       (string)$i);
+            $tp->setValue("NIK#{$i}",      $this->val($data['inventor']['nik'][$idx] ?? ''));
+            $tp->setValue("nama#{$i}",     $this->val($data['inventor']['nama'][$idx] ?? ''));
+            $tp->setValue("alamat#{$i}",   $this->val($data['inventor']['alamat'][$idx] ?? ''));
             $tp->setValue("kode_pos#{$i}", $this->val($data['inventor']['kode_pos'][$idx] ?? ''));
-            $tp->setValue("email#{$i}", $this->val($data['inventor']['email'][$idx] ?? ''));
-            $tp->setValue("no_hp#{$i}", $this->val($data['inventor']['no_hp'][$idx] ?? ''));
+            $tp->setValue("email#{$i}",    $this->val($data['inventor']['email'][$idx] ?? ''));
+            $tp->setValue("no_hp#{$i}",    $this->val($data['inventor']['no_hp'][$idx] ?? ''));
         }
 
-        // =========================
-        // Clone list_inventor
-        // =========================
-    $tp->cloneBlock('list_inventor', $jumlah, true, true);
-
-
+        $tp->cloneBlock('list_inventor', $jumlah, true, true);
         for ($i = 1; $i <= $jumlah; $i++) {
             $idx = $i - 1;
-            $tp->setValue("no_list#{$i}", (string)$i);
+            $tp->setValue("no_list#{$i}",   (string)$i);
             $tp->setValue("nama_list#{$i}", $this->val($data['inventor']['nama'][$idx] ?? ''));
         }
 
-        // Simpan file sementara & download
         $out = sys_get_temp_dir() . '/hakcipta_' . uniqid() . '.docx';
         $tp->saveAs($out);
+        @unlink($templatePath);
 
-        $format = $data['download_format'];
-
-        if ($format === 'docx') {
-        return response()
-                    ->download($out, 'Surat Pengalihan Hak Cipta.docx')
-                    ->deleteFileAfterSend(true);
+        if ($data['download_format'] === 'docx') {
+            return response()
+                ->download($out, 'Surat Pengalihan Hak Cipta.docx')
+                ->deleteFileAfterSend(true);
         }
 
-        // === Convert DOCX 
-        $soffice = 'D:\Program Files\LibreOffice\program\soffice.exe';
+        // === Convert ke PDF ===
+        if (PHP_OS_FAMILY === 'Windows') {
+            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            if (!file_exists($soffice)) {
+                $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
+            }
+            if (!file_exists($soffice)) {
+                $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            }
+        } else {
+            $soffice = '/usr/bin/soffice';
+        }
+
         if (!file_exists($soffice)) {
-            $soffice = 'D:\Program Files (x86)\LibreOffice\program\soffice.exe';
-        }
-        if (!file_exists($soffice)) {
-            abort(500, 'soffice.exe tidak ditemukan. Cek instalasi LibreOffice.');
+            abort(500, "LibreOffice tidak ditemukan: {$soffice}");
         }
 
-        $outDir  = dirname($out);
-        $pdfPath = preg_replace('/\.docx$/i', '.pdf', $out);
+        $outDir    = dirname($out);
+        $pdfPath   = preg_replace('/\.docx$/i', '.pdf', $out);
+        $loProfile = sys_get_temp_dir() . '/lo_profile_cipta_' . uniqid();
 
-        // command 
-        $cmd = '"' . $soffice . '" --headless --nologo --nofirststartwizard '
-            . '--convert-to pdf --outdir "' . $outDir . '" "' . $out . '" 2>&1';
+        if (!is_dir($loProfile)) {
+            mkdir($loProfile, 0777, true);
+        }
 
-        $output = [];
-        $code = 0;
-        exec($cmd, $output, $code);
+        $profileArg = '-env:UserInstallation=file:///' . str_replace('\\', '/', $loProfile);
 
-        if ($code !== 0 || !file_exists($pdfPath)) {
-            abort(500, "Gagal convert PDF. ExitCode=$code\n" . implode("\n", $output));
+        $process = new \Symfony\Component\Process\Process([
+            $soffice,
+            '--headless',
+            '--nologo',
+            '--nofirststartwizard',
+            '--nodefault',
+            '--norestore',
+            $profileArg,
+            '--convert-to', 'pdf:writer_pdf_Export',
+            '--outdir', str_replace('\\', '/', $outDir),
+            str_replace('\\', '/', $out),
+        ]);
+
+        $process->setEnv([
+            'USERPROFILE' => $loProfile,
+            'APPDATA'     => $loProfile,
+            'TEMP'        => $loProfile,
+            'TMP'         => $loProfile,
+        ]);
+
+        $process->setTimeout(120);
+        $process->run();
+
+        clearstatcache();
+
+        if (!file_exists($pdfPath)) {
+            $pdfs = glob($outDir . DIRECTORY_SEPARATOR . '*.pdf');
+            if ($pdfs) {
+                usort($pdfs, fn($a, $b) => filemtime($b) <=> filemtime($a));
+                $pdfPath = $pdfs[0];
+            }
+        }
+
+        @array_map('unlink', glob($loProfile . '/*'));
+        @rmdir($loProfile);
+        @unlink($out);
+
+        if (!$pdfPath || !file_exists($pdfPath)) {
+            abort(
+                500,
+                "Gagal convert PDF.\n" .
+                "ExitCode: " . $process->getExitCode() . "\n" .
+                "ErrorOutput: " . $process->getErrorOutput() . "\n" .
+                "Output: " . $process->getOutput()
+            );
         }
 
         return response()
