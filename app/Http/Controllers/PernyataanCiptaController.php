@@ -72,14 +72,18 @@ class PernyataanCiptaController extends Controller
 
         // === Convert DOCX 
         if (PHP_OS_FAMILY === 'Windows') {
-    $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
 
-    if (!file_exists($soffice)) {
-        $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
-    }
-} else {
-    $soffice = '/usr/bin/soffice';
-}
+            if (!file_exists($soffice)) {
+                $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
+            }
+        } else {
+            $soffice = '/usr/bin/soffice';
+        }
+
+        if (!file_exists($soffice)) {
+            abort(500, "LibreOffice tidak ditemukan: {$soffice}");
+        }
 
         $outDir  = dirname($out);
         $pdfPath = preg_replace('/\.docx$/i', '.pdf', $out);
@@ -89,12 +93,25 @@ class PernyataanCiptaController extends Controller
             . '--convert-to pdf --outdir "' . $outDir . '" "' . $out . '" 2>&1';
 
         $output = [];
-        $code = 0;
-        exec($cmd, $output, $code);
+$code = 0;
 
-        if ($code !== 0 || !file_exists($pdfPath)) {
-            abort(500, "Gagal convert PDF. ExitCode=$code\n" . implode("\n", $output));
-        }
+exec($cmd, $output, $code);
+
+clearstatcache();
+
+if (!file_exists($pdfPath)) {
+    sleep(1);
+    clearstatcache();
+}
+
+if ($code !== 0 || !file_exists($pdfPath)) {
+    abort(
+        500,
+        "Gagal convert PDF.\n" .
+        "ExitCode: {$code}\n" .
+        implode("\n", $output)
+    );
+}
 
         return response()
             ->download($pdfPath, 'Surat Pernyataan Hak Cipta.pdf')
