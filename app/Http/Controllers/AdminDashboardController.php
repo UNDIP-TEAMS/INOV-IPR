@@ -1782,7 +1782,7 @@ class AdminDashboardController extends Controller
 
         // LibreOffice path
         if (PHP_OS_FAMILY === 'Windows') {
-            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';
         } else {
             $soffice = '/usr/bin/soffice';
         }

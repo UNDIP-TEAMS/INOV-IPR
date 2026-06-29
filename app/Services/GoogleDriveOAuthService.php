@@ -33,8 +33,13 @@ class GoogleDriveOAuthService
         } else {
             $client->setClientId(config('services.google_paten.client_id'));
         }
-        $client->setClientSecret(config('services.google_cipta.client_secret'));
-        $client->setRedirectUri(config('services.google_cipta.redirect'));
+        $config = $type === 'cipta'
+    ? config('services.google_cipta')
+    : config('services.google_paten');
+
+$client->setClientId($config['client_id']);
+$client->setClientSecret($config['client_secret']);
+$client->setRedirectUri($config['redirect']);
         $client->setAccessType('offline');
         $client->setAccessToken($token);
         if ($client->isAccessTokenExpired()) {
