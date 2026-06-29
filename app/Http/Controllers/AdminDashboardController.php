@@ -1744,13 +1744,23 @@ class AdminDashboardController extends Controller
     {
         $meta = $this->getRowByType($type, $id);
 
-       $template = $type === 'paten'
-    ? storage_path('app/templates/tanda_terima_paten.docx')
-    : storage_path('app/templates/tanda_terima_hakcipta.docx');
+        $templateFile = $type === 'paten'
+            ? 'tanda_terima_paten.docx'
+            : 'tanda_terima_hakcipta.docx';
 
-    if (!file_exists($template)) {
-        throw new \Exception("Template tanda terima tidak ditemukan: {$template}");
-    }
+        $tmpDir = storage_path('app/tmp');
+
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
+
+        $template = $tmpDir . DIRECTORY_SEPARATOR . $templateFile;
+
+        file_put_contents(
+            $template,
+            Storage::disk('s3')->get($templateFile)
+        );
+
 
         $doc = new TemplateProcessor($template);
         $judul = trim((string)($meta['judul'] ?? '-')) ?: '-';
@@ -1771,10 +1781,15 @@ class AdminDashboardController extends Controller
         $doc->saveAs($tmpDocx);
 
         // LibreOffice path
-        $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';;
+        if (PHP_OS_FAMILY === 'Windows') {
+            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+        } else {
+            $soffice = '/usr/bin/soffice';
+        }
+
         if (!file_exists($soffice)) {
             @unlink($tmpDocx);
-            throw new \Exception("LibreOffice (soffice.exe) tidak ditemukan: {$soffice}");
+            throw new \Exception("LibreOffice tidak ditemukan: {$soffice}");
         }
 
         $convertOut = storage_path('app/lo_out');
