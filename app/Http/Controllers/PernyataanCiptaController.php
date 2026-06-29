@@ -18,18 +18,18 @@ class PernyataanCiptaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'judul_ciptaan' => ['required', 'string', 'max:255'],
-            'jenis_cipta' => ['required', 'string', 'max:255'],
+            'judul_ciptaan'       => ['required', 'string', 'max:255'],
+            'jenis_cipta'         => ['required', 'string', 'max:255'],
             'jenis_cipta_lainnya' => ['nullable', 'string', 'max:255'],
-            'tanggal_pengisian' => ['required', 'date'],
-
-            'download_format' => ['required', 'in:pdf,docx'],
+            'tanggal_pengisian'   => ['required', 'date'],
+            'download_format'     => ['required', 'in:pdf,docx'],
         ]);
 
         session(['hakcipta.form' => $data]);
+
         if ($request->input('action') === 'next') {
             return redirect()
-                ->route('hakcipta.pengalihanhak') 
+                ->route('hakcipta.pengalihanhak')
                 ->with('success', 'Data tersimpan.');
         }
 
@@ -40,42 +40,35 @@ class PernyataanCiptaController extends Controller
         }
 
         $templatePath = tempnam(sys_get_temp_dir(), 'template_cipta_') . '.docx';
-
-        file_put_contents(
-            $templatePath,
-            Storage::disk('s3')->get($templateObjectPath)
-        );
+        file_put_contents($templatePath, Storage::disk('s3')->get($templateObjectPath));
 
         $tp = new TemplateProcessor($templatePath);
 
-
         $tp->setValue('judul_ciptaan', $this->val($data['judul_ciptaan']));
+
         $berupa = $data['jenis_cipta'] === 'Lainnya'
             ? $this->val($data['jenis_cipta_lainnya'] ?? '')
             : $this->val($data['jenis_cipta']);
-
         $tp->setValue('berupa', $berupa);
 
         $tgl = Carbon::parse($data['tanggal_pengisian'])->locale('id');
         $tp->setValue('tanggal_pengisian', $tgl->translatedFormat('d F Y'));
+
         $out = tempnam(sys_get_temp_dir(), 'cipta_') . '.docx';
-    
         $tp->saveAs($out);
+        @unlink($templatePath);
 
-        $format = $data['download_format'];
-
-        if ($format === 'docx') {
-        return response()
-                    ->download($out, 'Surat Pernyataan Hak Cipta.docx')
-                    ->deleteFileAfterSend(true);
+        if ($data['download_format'] === 'docx') {
+            return response()
+                ->download($out, 'Surat Pernyataan Hak Cipta.docx')
+                ->deleteFileAfterSend(true);
         }
 
-        // === Convert DOCX 
+        // === Convert ke PDF ===
         if (PHP_OS_FAMILY === 'Windows') {
-            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
-
+            $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';
             if (!file_exists($soffice)) {
-                $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
+                $soffice = 'D:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
             }
         } else {
             $soffice = '/usr/bin/soffice';
@@ -85,33 +78,62 @@ class PernyataanCiptaController extends Controller
             abort(500, "LibreOffice tidak ditemukan: {$soffice}");
         }
 
-        $outDir  = dirname($out);
-        $pdfPath = preg_replace('/\.docx$/i', '.pdf', $out);
+        $outDir     = dirname($out);
+        $pdfPath    = preg_replace('/\.docx$/i', '.pdf', $out);
+        $loProfile  = sys_get_temp_dir() . '/lo_profile_cipta_' . uniqid();
 
-        // command
-        $cmd = '"' . $soffice . '" --headless --nologo --nofirststartwizard '
-            . '--convert-to pdf --outdir "' . $outDir . '" "' . $out . '" 2>&1';
+        if (!is_dir($loProfile)) {
+            mkdir($loProfile, 0777, true);
+        }
 
-        $output = [];
-$code = 0;
+        $profileArg = '-env:UserInstallation=file:///' . str_replace('\\', '/', $loProfile);
 
-exec($cmd, $output, $code);
+        $process = new \Symfony\Component\Process\Process([
+            $soffice,
+            '--headless',
+            '--nologo',
+            '--nofirststartwizard',
+            '--nodefault',
+            '--norestore',
+            $profileArg,
+            '--convert-to', 'pdf:writer_pdf_Export',
+            '--outdir', str_replace('\\', '/', $outDir),
+            str_replace('\\', '/', $out),
+        ]);
 
-clearstatcache();
+        $process->setEnv([
+            'USERPROFILE' => $loProfile,
+            'APPDATA'     => $loProfile,
+            'TEMP'        => $loProfile,
+            'TMP'         => $loProfile,
+        ]);
 
-if (!file_exists($pdfPath)) {
-    sleep(1);
-    clearstatcache();
-}
+        $process->setTimeout(120);
+        $process->run();
 
-if ($code !== 0 || !file_exists($pdfPath)) {
-    abort(
-        500,
-        "Gagal convert PDF.\n" .
-        "ExitCode: {$code}\n" .
-        implode("\n", $output)
-    );
-}
+        clearstatcache();
+
+        if (!file_exists($pdfPath)) {
+            $pdfs = glob($outDir . DIRECTORY_SEPARATOR . '*.pdf');
+            if ($pdfs) {
+                usort($pdfs, fn($a, $b) => filemtime($b) <=> filemtime($a));
+                $pdfPath = $pdfs[0];
+            }
+        }
+
+        @array_map('unlink', glob($loProfile . '/*'));
+        @rmdir($loProfile);
+        @unlink($out);
+
+        if (!$pdfPath || !file_exists($pdfPath)) {
+            abort(
+                500,
+                "Gagal convert PDF.\n" .
+                "ExitCode: " . $process->getExitCode() . "\n" .
+                "ErrorOutput: " . $process->getErrorOutput() . "\n" .
+                "Output: " . $process->getOutput()
+            );
+        }
 
         return response()
             ->download($pdfPath, 'Surat Pernyataan Hak Cipta.pdf')
