@@ -2,5 +2,5 @@
 !private/
 !public/
 !.gitignore
-!storage/app/google/
-!storage/app/google/iprhub-501107-951ba891f229.json
+!google/
+!google/iprhub-501107-951ba891f229.json
