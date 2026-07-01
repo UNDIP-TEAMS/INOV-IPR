@@ -20,7 +20,7 @@ class GoogleSheetService
         $client->setApplicationName('Laravel Google Sheets');
         $client->setScopes([Sheets::SPREADSHEETS]);
 
-        $credentialPath = base_path(env('GOOGLE_SHEETS_CREDENTIALS'));
+        $credentialPath = storage_path(env('GOOGLE_SHEETS_CREDENTIALS'));
 
 
         if (!file_exists($credentialPath)) {
