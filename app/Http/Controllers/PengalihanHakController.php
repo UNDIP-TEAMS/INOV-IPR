@@ -93,7 +93,7 @@ class PengalihanHakController extends Controller
 
         // === Convert ke PDF ===
         if (PHP_OS_FAMILY === 'Windows') {
-            $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+            $soffice = 'D:\\Program Files\\LibreOffice\\program\\soffice.exe';
             if (!file_exists($soffice)) {
                 $soffice = 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe';
             }

@@ -27,6 +27,7 @@ class GoogleSheetService
             throw new \Exception("File credentials Google Sheets tidak ditemukan: " . $credentialPath);
         }
 
+        
         $client->setAuthConfig($credentialPath);
 
         $this->service = new Sheets($client);
