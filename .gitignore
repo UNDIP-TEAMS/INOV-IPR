@@ -23,5 +23,5 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 /public/images/
-composer.lock
-package-lock.json
+/composer.lock
+/package-lock.json
