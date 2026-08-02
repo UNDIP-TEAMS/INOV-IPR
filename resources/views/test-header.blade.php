@@ -9,7 +9,7 @@
 
 <img src="{{ Storage::disk('s3')->url('bg2.jpg') }}" class="hero-img" alt="gedung">
   <div class="hero-text">
-    <h1>Selamat Datang</h1>
+    <h1>Selamat Datang TESTTESTESTESTSESES</h1>
     <h2>di IPRHub Universitas Diponegoro</h2>
   </div>
 </div>
