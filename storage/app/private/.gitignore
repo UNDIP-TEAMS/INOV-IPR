@@ -1,2 +1,4 @@
 *
 !.gitignore
+!.google_drive_token.json
+!.admin_credentials.json
