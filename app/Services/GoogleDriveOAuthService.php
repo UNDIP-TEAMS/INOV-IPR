@@ -44,7 +44,7 @@ class GoogleDriveOAuthService
             $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
 
             if (isset($newToken['error'])) {
-                throw new \Exception(json_encode($newToken));
+                throw new \Exception('Gagal me-refresh token Google. Silakan hubungkan ulang akun Google.');
             }
 
             $merged = array_merge($token, $newToken);
