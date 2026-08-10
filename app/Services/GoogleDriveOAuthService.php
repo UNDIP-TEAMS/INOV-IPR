@@ -44,21 +44,11 @@ class GoogleDriveOAuthService
             $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
 
             if (isset($newToken['error'])) {
-dd([
-    'client_id' => config('services.google_cipta.client_id'),
-    'client_secret_suffix' => substr(config('services.google_cipta.client_secret'), -4),
-
-    'refresh_token_exists' => !empty($refreshToken),
-    'refresh_token_length' => strlen($refreshToken),
-
-    'scope' => $token['scope'] ?? null,
-    'token_type' => $token['token_type'] ?? null,
-    'created' => $token['created'] ?? null,
-    'expires_in' => $token['expires_in'] ?? null,
-
-    'token_file' => Storage::disk('local')->path('google_drive_token.json'),
-]);
-}
+                throw new \Exception(
+                    'Gagal me-refresh token Google: ' .
+                    ($newToken['error_description'] ?? $newToken['error'])
+                );
+            }
 
             $merged = array_merge($token, $newToken);
 
