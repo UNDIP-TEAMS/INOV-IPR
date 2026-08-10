@@ -44,7 +44,13 @@ class GoogleDriveOAuthService
             $newToken = $client->fetchAccessTokenWithRefreshToken($refreshToken);
 
             if (isset($newToken['error'])) {
-    dd($newToken);
+    dd([
+    'client_id' => config('services.google_cipta.client_id'),
+    'client_secret_exists' => !empty(config('services.google_cipta.client_secret')),
+    'client_secret_suffix' => substr(config('services.google_cipta.client_secret'), -4),
+    'refresh_token_exists' => !empty($refreshToken),
+    'token_keys' => array_keys($token),
+]);
 }
 
             $merged = array_merge($token, $newToken);
